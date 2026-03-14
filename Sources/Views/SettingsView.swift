@@ -75,7 +75,7 @@ struct SettingsView: View {
 
             // MARK: - Applications
             Section("Applications") {
-                Picker("Default Browser", selection: $defaultBrowser) {
+                Picker("Default External Browser", selection: $defaultBrowser) {
                     Text("System Default").tag("")
                     ForEach(appEnv.installedBrowsers) { app in
                         Text(app.name).tag(app.bundleID)
