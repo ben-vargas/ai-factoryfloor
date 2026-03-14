@@ -19,8 +19,6 @@ struct ProjectSidebar: View {
     @State private var newProjectName = ""
     @State private var newProjectError = ""
     @State private var isDropTargeted = false
-    @State private var addingWorkstreamForProject: UUID?
-    @State private var newWorkstreamName = ""
     @State private var projectToDelete: UUID?
     @State private var expandedProjects: Set<UUID> = []
     @State private var cachedSortedIDs: [UUID] = []
@@ -87,7 +85,7 @@ struct ProjectSidebar: View {
                                 }
                             }
                         } : nil,
-                        onAdd: { startAddingWorkstream(for: project.id) },
+                        onAdd: { addWorkstream(for: project.id) },
                         onDelete: { projectToDelete = project.id }
                     )
                     .tag(SidebarSelection.project(project.id))
@@ -213,22 +211,15 @@ struct ProjectSidebar: View {
                 onCancel: { showingNewProjectName = false }
             )
         }
-        .sheet(item: $addingWorkstreamForProject) { projectID in
-            AddWorkstreamSheet(
-                name: $newWorkstreamName,
-                onAdd: { commitWorkstream(forProjectID: projectID) },
-                onCancel: { addingWorkstreamForProject = nil }
-            )
-        }
         .onReceive(NotificationCenter.default.publisher(for: .addProject)) { _ in
             showingAddProjectChoice = true
         }
         .onReceive(NotificationCenter.default.publisher(for: .addNew)) { _ in
             if case .workstream(let wsID) = selection,
                let project = projects.first(where: { $0.workstreams.contains(where: { $0.id == wsID }) }) {
-                startAddingWorkstream(for: project.id)
+                addWorkstream(for: project.id)
             } else if case .project(let pid) = selection {
-                startAddingWorkstream(for: pid)
+                addWorkstream(for: pid)
             } else {
                 showingAddProjectChoice = true
             }
@@ -259,22 +250,15 @@ struct ProjectSidebar: View {
 
     // MARK: - Workstream management
 
-    private func startAddingWorkstream(for projectID: UUID) {
-        newWorkstreamName = ""
-        expandedProjects.insert(projectID)
-        addingWorkstreamForProject = projectID
-    }
-
-    private func commitWorkstream(forProjectID projectID: UUID) {
-        let name = newWorkstreamName.trimmingCharacters(in: .whitespaces)
-        addingWorkstreamForProject = nil
-        newWorkstreamName = ""
-        guard !name.isEmpty else { return }
+    private func addWorkstream(for projectID: UUID) {
         guard let index = projects.firstIndex(where: { $0.id == projectID }) else { return }
-        expandedProjects.insert(projectID)
+
+        let existingNames = Set(projects[index].workstreams.map(\.name))
+        let name = NameGenerator.generate(avoiding: existingNames)
 
         let workstream = Workstream(name: name)
         projects[index].workstreams.append(workstream)
+        expandedProjects.insert(projectID)
         selection = .workstream(workstream.id)
         onProjectsChanged()
     }
@@ -631,32 +615,4 @@ private struct NewProjectSheet: View {
     }
 }
 
-private struct AddWorkstreamSheet: View {
-    @Binding var name: String
-    let onAdd: () -> Void
-    let onCancel: () -> Void
 
-    var body: some View {
-        VStack(spacing: 16) {
-            Text("Add Workstream")
-                .font(.headline)
-
-            TextField("Workstream Name", text: $name)
-                .textFieldStyle(.roundedBorder)
-                .onSubmit {
-                    if !name.trimmingCharacters(in: .whitespaces).isEmpty { onAdd() }
-                }
-
-            HStack {
-                Button("Cancel", action: onCancel)
-                    .keyboardShortcut(.cancelAction)
-                Spacer()
-                Button("Add", action: onAdd)
-                    .keyboardShortcut(.defaultAction)
-                    .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
-            }
-        }
-        .padding(20)
-        .frame(width: 300)
-    }
-}
