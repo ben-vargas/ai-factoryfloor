@@ -262,7 +262,7 @@ struct ProjectSidebar: View {
     @EnvironmentObject private var surfaceCache: TerminalSurfaceCache
 
     private func archiveWorkstream(_ workstreamID: UUID, in project: inout Project) {
-        surfaceCache.removeSurface(for: workstreamID)
+        surfaceCache.removeWorkstreamSurfaces(for: workstreamID)
         project.workstreams.removeAll { $0.id == workstreamID }
         if case .workstream(let id) = selection, id == workstreamID {
             selection = project.workstreams.first.map { .workstream($0.id) } ?? .project(project.id)
@@ -275,7 +275,7 @@ struct ProjectSidebar: View {
     private func deleteProject(id: UUID) {
         if let project = projects.first(where: { $0.id == id }) {
             for ws in project.workstreams {
-                surfaceCache.removeSurface(for: ws.id)
+                surfaceCache.removeWorkstreamSurfaces(for: ws.id)
             }
         }
         projects.removeAll { $0.id == id }

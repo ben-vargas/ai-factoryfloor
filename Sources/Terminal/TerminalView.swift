@@ -19,7 +19,7 @@ final class TerminalView: NSView, NSTextInputClient {
     private var resizeDebounceWork: DispatchWorkItem?
     private var activityDebounceWork: DispatchWorkItem?
 
-    init(app: ghostty_app_t, workingDirectory: String? = nil, environmentVars: [String: String] = [:]) {
+    init(app: ghostty_app_t, workingDirectory: String? = nil, command: String? = nil, initialInput: String? = nil, environmentVars: [String: String] = [:]) {
         super.init(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
 
         wantsLayer = true
@@ -48,18 +48,51 @@ final class TerminalView: NSView, NSTextInputClient {
             }
         }
 
+        // Use nested withCString to keep all C strings alive during surface creation
+        let createSurface = { (cfg: inout ghostty_surface_config_s) in
+            self.surface = ghostty_surface_new(app, &cfg)
+        }
+
         cEnvVars.withUnsafeMutableBufferPointer { envBuf in
             config.env_vars = envBuf.baseAddress
             config.env_var_count = envBuf.count
 
-            if let workingDirectory {
-                workingDirectory.withCString { cstr in
-                    config.working_directory = cstr
-                    self.surface = ghostty_surface_new(app, &config)
+            func applyAndCreate(_ cfg: inout ghostty_surface_config_s) {
+                if let workingDirectory {
+                    workingDirectory.withCString { wdPtr in
+                        cfg.working_directory = wdPtr
+                        if let command {
+                            command.withCString { cmdPtr in
+                                cfg.command = cmdPtr
+                                if let initialInput {
+                                    initialInput.withCString { iiPtr in
+                                        cfg.initial_input = iiPtr
+                                        createSurface(&cfg)
+                                    }
+                                } else {
+                                    createSurface(&cfg)
+                                }
+                            }
+                        } else if let initialInput {
+                            initialInput.withCString { iiPtr in
+                                cfg.initial_input = iiPtr
+                                createSurface(&cfg)
+                            }
+                        } else {
+                            createSurface(&cfg)
+                        }
+                    }
+                } else if let command {
+                    command.withCString { cmdPtr in
+                        cfg.command = cmdPtr
+                        createSurface(&cfg)
+                    }
+                } else {
+                    createSurface(&cfg)
                 }
-            } else {
-                self.surface = ghostty_surface_new(app, &config)
             }
+
+            applyAndCreate(&config)
         }
 
         guard surface != nil else {

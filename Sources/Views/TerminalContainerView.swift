@@ -1,5 +1,5 @@
-// ABOUTME: NSViewRepresentable that bridges a TerminalView into SwiftUI.
-// ABOUTME: Manages the lifecycle of terminal surfaces per workstream, caching them for fast switching.
+// ABOUTME: Hosts a workstream's two terminals: claude (main) and workspace (secondary).
+// ABOUTME: Manages the lifecycle of terminal surfaces, caching them for fast switching.
 
 import SwiftUI
 
@@ -7,11 +7,77 @@ extension Notification.Name {
     static let terminalSurfaceClosed = Notification.Name("ff2.terminalSurfaceClosed")
 }
 
-struct TerminalContainerView: NSViewRepresentable {
+/// Deterministic UUID derived from a base UUID and a salt string.
+func derivedUUID(from base: UUID, salt: String) -> UUID {
+    var hasher = Hasher()
+    hasher.combine(base)
+    hasher.combine(salt)
+    let hash = hasher.finalize()
+    // Build a deterministic UUID from the hash
+    var bytes = UUID().uuid
+    withUnsafeMutableBytes(of: &bytes) { buf in
+        withUnsafeBytes(of: hash) { hashBuf in
+            for i in 0..<min(buf.count, hashBuf.count) {
+                buf[i] = hashBuf[i]
+            }
+        }
+    }
+    return UUID(uuid: bytes)
+}
+
+struct TerminalContainerView: View {
     let workstreamID: UUID
     let workingDirectory: String
     let projectName: String
     let workstreamName: String
+
+    @EnvironmentObject var surfaceCache: TerminalSurfaceCache
+    @EnvironmentObject var appEnv: AppEnvironment
+
+    private var claudeID: UUID { workstreamID }
+    private var workspaceID: UUID { derivedUUID(from: workstreamID, salt: "workspace") }
+
+    private var claudePath: String? {
+        appEnv.toolStatus.claude.path
+    }
+
+    var body: some View {
+        VSplitView {
+            // Claude terminal (main, takes ~70%)
+            SingleTerminalView(
+                surfaceID: claudeID,
+                workingDirectory: workingDirectory,
+                command: claudePath,
+                environmentVars: envVars
+            )
+            .frame(minHeight: 100)
+
+            // Workspace terminal (secondary)
+            SingleTerminalView(
+                surfaceID: workspaceID,
+                workingDirectory: workingDirectory,
+                initialInput: "ls\n",
+                environmentVars: envVars
+            )
+            .frame(minHeight: 60, idealHeight: 150)
+        }
+    }
+
+    private var envVars: [String: String] {
+        [
+            "FF_PROJECT": projectName,
+            "FF_WORKSTREAM": workstreamName,
+        ]
+    }
+}
+
+/// NSViewRepresentable for a single terminal surface.
+struct SingleTerminalView: NSViewRepresentable {
+    let surfaceID: UUID
+    let workingDirectory: String
+    var command: String?
+    var initialInput: String?
+    var environmentVars: [String: String] = [:]
 
     @EnvironmentObject var surfaceCache: TerminalSurfaceCache
 
@@ -24,19 +90,15 @@ struct TerminalContainerView: NSViewRepresentable {
     func updateNSView(_ container: NSView, context: Context) {
         guard let app = TerminalApp.shared.app else { return }
 
-        let envVars = [
-            "FF_PROJECT": projectName,
-            "FF_WORKSTREAM": workstreamName,
-        ]
-
         let terminalView = surfaceCache.surface(
-            for: workstreamID,
+            for: surfaceID,
             app: app,
             workingDirectory: workingDirectory,
-            environmentVars: envVars
+            command: command,
+            initialInput: initialInput,
+            environmentVars: environmentVars
         )
 
-        // Only re-add if the terminal view changed
         if terminalView.superview !== container {
             container.subviews.forEach { $0.removeFromSuperview() }
             container.addSubview(terminalView)
@@ -56,13 +118,14 @@ struct TerminalContainerView: NSViewRepresentable {
 }
 
 /// Caches terminal surfaces so switching workstreams doesn't destroy/recreate them.
-/// When a terminal exits, removes the old surface and triggers a SwiftUI update to recreate it.
 final class TerminalSurfaceCache: ObservableObject {
     private var surfaces: [UUID: TerminalView] = [:]
     private var surfaceParams: [UUID: SurfaceParams] = [:]
 
     struct SurfaceParams {
         let workingDirectory: String
+        let command: String?
+        let initialInput: String?
         let environmentVars: [String: String]
     }
 
@@ -77,35 +140,39 @@ final class TerminalSurfaceCache: ObservableObject {
         }
     }
 
-    func surface(for workstreamID: UUID, app: ghostty_app_t, workingDirectory: String, environmentVars: [String: String] = [:]) -> TerminalView {
-        if let existing = surfaces[workstreamID] {
-            existing.workstreamID = workstreamID
+    func surface(for id: UUID, app: ghostty_app_t, workingDirectory: String, command: String? = nil, initialInput: String? = nil, environmentVars: [String: String] = [:]) -> TerminalView {
+        if let existing = surfaces[id] {
+            existing.workstreamID = id
             return existing
         }
-        let view = TerminalView(app: app, workingDirectory: workingDirectory, environmentVars: environmentVars)
-        view.workstreamID = workstreamID
-        surfaces[workstreamID] = view
-        surfaceParams[workstreamID] = SurfaceParams(workingDirectory: workingDirectory, environmentVars: environmentVars)
+        let view = TerminalView(app: app, workingDirectory: workingDirectory, command: command, initialInput: initialInput, environmentVars: environmentVars)
+        view.workstreamID = id
+        surfaces[id] = view
+        surfaceParams[id] = SurfaceParams(workingDirectory: workingDirectory, command: command, initialInput: initialInput, environmentVars: environmentVars)
         return view
     }
 
-    func removeSurface(for workstreamID: UUID) {
-        surfaces.removeValue(forKey: workstreamID)
-        surfaceParams.removeValue(forKey: workstreamID)
+    func removeSurface(for id: UUID) {
+        surfaces.removeValue(forKey: id)
+        surfaceParams.removeValue(forKey: id)
+    }
+
+    /// Remove both claude and workspace surfaces for a workstream.
+    func removeWorkstreamSurfaces(for workstreamID: UUID) {
+        removeSurface(for: workstreamID)
+        removeSurface(for: derivedUUID(from: workstreamID, salt: "workspace"))
     }
 
     private func handleSurfaceClosed(_ closedView: TerminalView) {
-        guard let (wsID, _) = surfaces.first(where: { $0.value === closedView }) else { return }
-        guard let params = surfaceParams[wsID],
+        guard let (id, _) = surfaces.first(where: { $0.value === closedView }) else { return }
+        guard let params = surfaceParams[id],
               let app = TerminalApp.shared.app else { return }
 
-        // Remove old surface and recreate
-        surfaces.removeValue(forKey: wsID)
-        let newView = TerminalView(app: app, workingDirectory: params.workingDirectory, environmentVars: params.environmentVars)
-        newView.workstreamID = wsID
-        surfaces[wsID] = newView
+        surfaces.removeValue(forKey: id)
+        let newView = TerminalView(app: app, workingDirectory: params.workingDirectory, command: params.command, initialInput: params.initialInput, environmentVars: params.environmentVars)
+        newView.workstreamID = id
+        surfaces[id] = newView
 
-        // Trigger SwiftUI update
         objectWillChange.send()
     }
 }
