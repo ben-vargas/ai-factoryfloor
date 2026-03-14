@@ -38,7 +38,21 @@
 
 /* Settings */
 "Settings" = "Settings";
+"Session" = "Session";
+"Tmux Mode" = "Tmux Mode";
+"Makes sessions persist across app restarts. Sessions are lost on system restart." = "Makes sessions persist across app restarts. Sessions are lost on system restart.";
 "Language" = "Language";
 "System Default" = "System Default";
 "Restart the app for the language change to take effect." = "Restart the app for the language change to take effect.";
+"Installed Tools" = "Installed Tools";
+"Not found" = "Not found";
+"Authenticated" = "Authenticated";
+"Not authenticated" = "Not authenticated";
+"Default Terminal" = "Default Terminal";
+"Terminal" = "Terminal";
+"No supported terminals found" = "No supported terminals found";
+"None" = "None";
+"Default Browser" = "Default Browser";
+"Browser" = "Browser";
+"No supported browsers found" = "No supported browsers found";
 "Done" = "Done";

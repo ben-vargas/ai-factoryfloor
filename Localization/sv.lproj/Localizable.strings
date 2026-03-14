@@ -38,7 +38,21 @@
 
 /* Settings */
 "Settings" = "Inställningar";
+"Session" = "Session";
+"Tmux Mode" = "Tmux-läge";
+"Makes sessions persist across app restarts. Sessions are lost on system restart." = "Sessioner bevaras mellan omstarter av appen. De försvinner vid omstart av systemet.";
 "Language" = "Språk";
 "System Default" = "Systemstandard";
 "Restart the app for the language change to take effect." = "Starta om appen för att språkändringen ska träda i kraft.";
+"Installed Tools" = "Installerade verktyg";
+"Not found" = "Hittades inte";
+"Authenticated" = "Autentiserad";
+"Not authenticated" = "Inte autentiserad";
+"Default Terminal" = "Standardterminal";
+"Terminal" = "Terminal";
+"No supported terminals found" = "Inga terminaler hittades";
+"None" = "Ingen";
+"Default Browser" = "Standardwebbläsare";
+"Browser" = "Webbläsare";
+"No supported browsers found" = "Inga webbläsare hittades";
 "Done" = "Klar";
