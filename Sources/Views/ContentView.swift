@@ -4,7 +4,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var projects: [Project] = []
+    @State private var projects: [Project] = ProjectStore.load()
     @State private var selectedProjectID: UUID?
     @StateObject private var surfaceCache = TerminalSurfaceCache()
 
@@ -34,5 +34,22 @@ struct ContentView: View {
             }
         }
         .environmentObject(surfaceCache)
+        .onChange(of: projects) { _, newValue in
+            ProjectStore.save(newValue)
+        }
+    }
+}
+
+enum ProjectStore {
+    private static let key = "ff2.projects"
+
+    static func load() -> [Project] {
+        guard let data = UserDefaults.standard.data(forKey: key) else { return [] }
+        return (try? JSONDecoder().decode([Project].self, from: data)) ?? []
+    }
+
+    static func save(_ projects: [Project]) {
+        guard let data = try? JSONEncoder().encode(projects) else { return }
+        UserDefaults.standard.set(data, forKey: key)
     }
 }

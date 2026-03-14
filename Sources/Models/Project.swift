@@ -3,7 +3,7 @@
 
 import Foundation
 
-struct Project: Identifiable, Hashable {
+struct Project: Identifiable, Hashable, Codable {
     let id: UUID
     var name: String
     var directory: String

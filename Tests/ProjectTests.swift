@@ -41,4 +41,33 @@ final class ProjectTests: XCTestCase {
         XCTAssertEqual(project.name, "new")
         XCTAssertEqual(project.directory, "/new")
     }
+
+    func testCodableRoundTrip() throws {
+        let projects = [
+            Project(name: "alpha", directory: "/Users/test/alpha"),
+            Project(name: "beta", directory: "/Users/test/beta"),
+        ]
+        let data = try JSONEncoder().encode(projects)
+        let decoded = try JSONDecoder().decode([Project].self, from: data)
+        XCTAssertEqual(projects, decoded)
+    }
+
+    func testCodablePreservesID() throws {
+        let original = Project(name: "test", directory: "/test")
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(Project.self, from: data)
+        XCTAssertEqual(original.id, decoded.id)
+        XCTAssertEqual(original.name, decoded.name)
+        XCTAssertEqual(original.directory, decoded.directory)
+    }
+
+    func testProjectStoreRoundTrip() {
+        let projects = [
+            Project(name: "one", directory: "/one"),
+            Project(name: "two", directory: "/two"),
+        ]
+        ProjectStore.save(projects)
+        let loaded = ProjectStore.load()
+        XCTAssertEqual(projects, loaded)
+    }
 }
