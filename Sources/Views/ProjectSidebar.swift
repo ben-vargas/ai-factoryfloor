@@ -2,6 +2,7 @@
 // ABOUTME: Supports adding and selecting projects, with the active project highlighted.
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 extension Notification.Name {
     static let addProject = Notification.Name("ff2.addProject")
@@ -12,6 +13,7 @@ struct ProjectSidebar: View {
     @Binding var selectedProjectID: UUID?
     @State private var pendingDirectory: String?
     @State private var pendingName: String = ""
+    @State private var isDropTargeted = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -23,6 +25,18 @@ struct ProjectSidebar: View {
                 .onDelete(perform: deleteProjects)
             }
             .listStyle(.sidebar)
+            .overlay {
+                if projects.isEmpty {
+                    VStack(spacing: 8) {
+                        Image(systemName: "folder.badge.plus")
+                            .font(.system(size: 32))
+                            .foregroundStyle(.tertiary)
+                        Text("Drop a folder here")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                }
+            }
 
             Divider()
 
@@ -36,6 +50,17 @@ struct ProjectSidebar: View {
                 Spacer()
             }
         }
+        .overlay {
+            if isDropTargeted {
+                RoundedRectangle(cornerRadius: 8)
+                    .strokeBorder(Color.accentColor, lineWidth: 2)
+                    .background(Color.accentColor.opacity(0.08))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+        }
+        .onDrop(of: [.fileURL], isTargeted: $isDropTargeted) { providers in
+            handleDrop(providers)
+        }
         .sheet(item: $pendingDirectory) { directory in
             ConfirmProjectSheet(
                 directory: directory,
@@ -47,6 +72,21 @@ struct ProjectSidebar: View {
         .onReceive(NotificationCenter.default.publisher(for: .addProject)) { _ in
             openDirectoryPicker()
         }
+    }
+
+    private func handleDrop(_ providers: [NSItemProvider]) -> Bool {
+        for provider in providers {
+            provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { data, _ in
+                guard let data = data as? Data,
+                      let url = URL(dataRepresentation: data, relativeTo: nil),
+                      url.hasDirectoryPath || FileManager.default.isDirectory(at: url) else { return }
+
+                DispatchQueue.main.async {
+                    addProject(name: url.lastPathComponent, directory: url.path)
+                }
+            }
+        }
+        return true
     }
 
     private func openDirectoryPicker() {
@@ -82,6 +122,13 @@ struct ProjectSidebar: View {
 // Make String work as an Identifiable sheet item
 extension String: @retroactive Identifiable {
     public var id: String { self }
+}
+
+extension FileManager {
+    func isDirectory(at url: URL) -> Bool {
+        var isDir: ObjCBool = false
+        return fileExists(atPath: url.path, isDirectory: &isDir) && isDir.boolValue
+    }
 }
 
 private struct ProjectRow: View {
