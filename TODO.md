@@ -14,6 +14,7 @@
 - [ ] Rename projects and workstreams inline
 - [ ] Reorder projects via drag-and-drop in sidebar
 - [ ] Keyboard shortcuts for switching between projects/workstreams (Cmd+1, Cmd+2, etc.)
+- [ ] External Chrome integration: launch Chrome with --remote-debugging-port, connect via CDP for WebMCP/Claude browser interaction
 
 ## Terminal
 - [x] Terminal resize flicker on session restart
@@ -24,7 +25,7 @@
 - [ ] Auto-update mechanism (Sparkle or similar)
 - [ ] Crash reporting
 - [ ] Move persistence from UserDefaults to a proper file (for larger state)
-- [ ] Settings panel (currently placeholder)
+- [x] Settings panel
 
 ## Localization
 - [x] Extract all user-facing strings to Localizable.strings
