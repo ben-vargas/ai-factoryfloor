@@ -24,3 +24,8 @@
 - [ ] Auto-update mechanism (Sparkle or similar)
 - [ ] Crash reporting
 - [ ] Move persistence from UserDefaults to a proper file (for larger state)
+- [ ] Settings panel (currently placeholder)
+
+## Localization
+- [x] Extract all user-facing strings to Localizable.strings
+- [ ] Add translations (copy en.lproj to xx.lproj, translate strings)

@@ -21,6 +21,7 @@ struct ProjectSidebar: View {
     @State private var newWorkstreamName = ""
     @State private var projectToDelete: UUID?
     @State private var expandedProjects: Set<UUID> = []
+    @State private var showingSettings = false
     @State private var cachedSortedIDs: [UUID] = []
     @AppStorage("ff2.sortOrder") private var sortOrder: ProjectSortOrder = .recent
 
@@ -149,6 +150,12 @@ struct ProjectSidebar: View {
                     .padding(8)
 
                     Spacer()
+
+                    Button(action: { showingSettings = true }) {
+                        Image(systemName: "gear")
+                    }
+                    .buttonStyle(.plain)
+                    .padding(8)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -176,6 +183,9 @@ struct ProjectSidebar: View {
         }
         .onDrop(of: [.fileURL], isTargeted: $isDropTargeted) { providers in
             handleDrop(providers)
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
         }
         .sheet(item: $pendingDirectory) { directory in
             ConfirmProjectSheet(
@@ -300,8 +310,8 @@ struct ProjectSidebar: View {
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
-        panel.message = "Choose a project directory"
-        panel.prompt = "Select"
+        panel.message = NSLocalizedString("Choose a project directory", comment: "")
+        panel.prompt = NSLocalizedString("Select", comment: "")
         guard panel.runModal() == .OK, let url = panel.url else { return }
         pendingName = url.lastPathComponent
         pendingDirectory = url.path
