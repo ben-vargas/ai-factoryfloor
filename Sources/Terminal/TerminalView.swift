@@ -17,7 +17,6 @@ final class TerminalView: NSView, NSTextInputClient {
     private var markedText = NSMutableAttributedString()
     private var keyTextAccumulator: [String]?
     private var resizeDebounceWork: DispatchWorkItem?
-    private var hasReceivedFirstResize = false
     private var activityDebounceWork: DispatchWorkItem?
 
     init(app: ghostty_app_t, workingDirectory: String? = nil, environmentVars: [String: String] = [:]) {
@@ -25,7 +24,6 @@ final class TerminalView: NSView, NSTextInputClient {
 
         wantsLayer = true
         layer?.isOpaque = true
-        alphaValue = 0 // Hidden until first real resize
 
         var config = ghostty_surface_config_new()
         config.userdata = Unmanaged.passUnretained(self).toOpaque()
@@ -139,7 +137,6 @@ final class TerminalView: NSView, NSTextInputClient {
                 DispatchQueue.main.async {
                     ghostty_surface_set_occlusion(surface, false)
                 }
-                self.revealIfNeeded()
             }
             resizeDebounceWork = work
             DispatchQueue.main.asyncAfter(
@@ -148,18 +145,10 @@ final class TerminalView: NSView, NSTextInputClient {
             )
         } else {
             ghostty_surface_set_size(surface, w, h)
-            revealIfNeeded()
         }
     }
 
-    private func revealIfNeeded() {
-        guard !hasReceivedFirstResize else { return }
-        hasReceivedFirstResize = true
-        // Show after a tiny delay so ghostty renders the first frame at the correct size
-        DispatchQueue.main.async {
-            self.alphaValue = 1
-        }
-    }
+
 
     override func updateTrackingAreas() {
         if let trackingArea {

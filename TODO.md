@@ -18,6 +18,7 @@
 ## Terminal
 - [ ] Terminal resize flicker on session restart (reduced but not fully eliminated)
 - [ ] Sidebar toggle animation still causes minor flicker at the end
+- [ ] Occlude non-visible terminal surfaces to save GPU (reverted, needs careful timing with initial render)
 
 ## Infrastructure
 - [ ] Auto-update mechanism (Sparkle or similar)

@@ -49,9 +49,6 @@ struct TerminalContainerView: NSViewRepresentable {
             ])
         }
 
-        // Mark this surface as visible, occlude all others
-        surfaceCache.setActiveSurface(workstreamID)
-
         DispatchQueue.main.async {
             terminalView.setFocused(true)
         }
@@ -90,15 +87,6 @@ final class TerminalSurfaceCache: ObservableObject {
         surfaces[workstreamID] = view
         surfaceParams[workstreamID] = SurfaceParams(workingDirectory: workingDirectory, environmentVars: environmentVars)
         return view
-    }
-
-    func setActiveSurface(_ activeID: UUID) {
-        for (id, view) in surfaces {
-            guard let surface = view.surface else { continue }
-            let isActive = id == activeID
-            ghostty_surface_set_occlusion(surface, !isActive)
-            view.setFocused(isActive)
-        }
     }
 
     func removeSurface(for workstreamID: UUID) {
