@@ -25,9 +25,10 @@ func derivedUUID(from base: UUID, salt: String) -> UUID {
     return UUID(uuid: bytes)
 }
 
-enum TerminalTab: Hashable {
+enum WorkstreamTab: Hashable {
     case claude
     case workspace
+    case browser
 }
 
 struct TerminalContainerView: View {
@@ -38,7 +39,7 @@ struct TerminalContainerView: View {
 
     @EnvironmentObject var surfaceCache: TerminalSurfaceCache
     @EnvironmentObject var appEnv: AppEnvironment
-    @State private var activeTab: TerminalTab = .claude
+    @State private var activeTab: WorkstreamTab = .claude
 
     private var claudeID: UUID { workstreamID }
     private var workspaceID: UUID { derivedUUID(from: workstreamID, salt: "workspace") }
@@ -51,11 +52,14 @@ struct TerminalContainerView: View {
         VStack(spacing: 0) {
             // Tab bar
             HStack(spacing: 0) {
-                TabButton(title: "Claude Code", icon: "sparkle", isActive: activeTab == .claude) {
+                TabButton(title: "Coding Agent", icon: "sparkle", isActive: activeTab == .claude) {
                     activeTab = .claude
                 }
                 TabButton(title: "Terminal", icon: "terminal", isActive: activeTab == .workspace) {
                     activeTab = .workspace
+                }
+                TabButton(title: "Browser", icon: "globe", isActive: activeTab == .browser) {
+                    activeTab = .browser
                 }
                 Spacer()
             }
@@ -84,6 +88,9 @@ struct TerminalContainerView: View {
                     environmentVars: envVars
                 )
                 .opacity(activeTab == .workspace ? 1 : 0)
+
+                BrowserView(defaultURL: "http://localhost:8000")
+                    .opacity(activeTab == .browser ? 1 : 0)
             }
         }
     }

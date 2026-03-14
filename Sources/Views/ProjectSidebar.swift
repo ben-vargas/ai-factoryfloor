@@ -151,7 +151,9 @@ struct ProjectSidebar: View {
 
                     Spacer()
 
-                    Button(action: { selection = .settings }) {
+                    Button(action: {
+                        NotificationCenter.default.post(name: .openSettings, object: nil)
+                    }) {
                         Image(systemName: "gear")
                             .font(.system(size: 16))
                     }

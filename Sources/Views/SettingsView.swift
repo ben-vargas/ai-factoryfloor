@@ -6,6 +6,7 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage("ff2.languageOverride") private var languageOverride: String = ""
     @AppStorage("ff2.tmuxMode") private var tmuxMode: Bool = false
+    @AppStorage("ff2.bypassPermissions") private var bypassPermissions: Bool = false
     @AppStorage("ff2.defaultTerminal") private var defaultTerminal: String = ""
     @AppStorage("ff2.defaultBrowser") private var defaultBrowser: String = ""
 
@@ -71,6 +72,14 @@ struct SettingsView: View {
                         Text(app.name).tag(app.bundleID)
                     }
                 }
+            }
+
+            // MARK: - Coding Agent
+            Section("Coding Agent") {
+                Toggle("Bypass permission prompts", isOn: $bypassPermissions)
+                Text("When enabled, the coding agent will not ask for confirmation before making changes. Use with caution: the agent will be able to edit files, run commands, and make git commits without asking.")
+                    .font(.caption)
+                    .foregroundStyle(bypassPermissions ? .orange : .secondary)
             }
 
             // MARK: - Applications
