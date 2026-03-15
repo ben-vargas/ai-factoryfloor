@@ -38,21 +38,25 @@ enum TmuxSession {
     /// Uses `new-session -A` which creates if missing, attaches if existing.
     /// Tmux is configured to be invisible: no status bar, no prefix key,
     /// mouse passthrough for scrolling.
+    /// Dedicated socket name so we don't interfere with the user's tmux.
+    private static let socketName = AppConstants.appID
+
     static func wrapCommand(tmuxPath: String, sessionName: String, command: String?) -> String {
         let escaped = shellEscape(sessionName)
         let conf = shellEscape(configPath)
+        // -L uses a dedicated socket, -f uses our minimal config
+        let base = "\(tmuxPath) -L \(socketName) -f \(conf) new-session -A -s \(escaped)"
         if let command {
-            return "\(tmuxPath) -f \(conf) new-session -A -s \(escaped) \(command)"
-        } else {
-            return "\(tmuxPath) -f \(conf) new-session -A -s \(escaped)"
+            return "\(base) \(command)"
         }
+        return base
     }
 
     /// Kill a tmux session by name.
     static func killSession(tmuxPath: String, sessionName: String) {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: tmuxPath)
-        process.arguments = ["kill-session", "-t", sessionName]
+        process.arguments = ["-L", socketName, "kill-session", "-t", sessionName]
         process.standardOutput = FileHandle.nullDevice
         process.standardError = FileHandle.nullDevice
         try? process.run()
