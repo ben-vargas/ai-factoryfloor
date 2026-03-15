@@ -177,19 +177,15 @@ struct SettingsView: View {
             }
 
             // MARK: - Danger
-            Section {
-                Button(role: .destructive, action: { showingClearConfirm = true }) {
-                    HStack {
-                        Image(systemName: "trash")
-                        Text("Clear project list")
-                    }
+            Section("Danger Zone") {
+                LabeledContent("Clear project list") {
+                    Button("Clear All...", role: .destructive, action: { showingClearConfirm = true })
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.red)
                 }
                 Text("Removes all projects and workstreams from the sidebar. No files or directories on disk will be deleted.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-            } header: {
-                Text("Danger Zone")
-                    .foregroundStyle(.red)
             }
         }
         .formStyle(.grouped)
