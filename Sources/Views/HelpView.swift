@@ -58,6 +58,7 @@ struct HelpView: View {
                 }
                 .formStyle(.grouped)
                 .scrollDisabled(true)
+                .scrollContentBackground(.hidden)
 
                 // Credits
                 VStack(spacing: 4) {
