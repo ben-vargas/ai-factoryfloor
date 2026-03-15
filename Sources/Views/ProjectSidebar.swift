@@ -86,6 +86,8 @@ struct ProjectSidebar: View {
                             }
                         } : nil,
                         onAdd: { addWorkstream(for: project.id) },
+                        onAddWithPermissions: { addWorkstream(for: project.id, bypassPermissions: true) },
+                        onAddWithoutPermissions: { addWorkstream(for: project.id, bypassPermissions: false) },
                         onDelete: { projectToDelete = project.id }
                     )
                     .tag(SidebarSelection.project(project.id))
@@ -250,11 +252,12 @@ struct ProjectSidebar: View {
 
     // MARK: - Workstream management
 
-    private func addWorkstream(for projectID: UUID) {
+    @AppStorage("ff2.bypassPermissions") private var defaultBypass: Bool = false
+
+    private func addWorkstream(for projectID: UUID, bypassPermissions: Bool? = nil) {
         guard let index = projects.firstIndex(where: { $0.id == projectID }) else { return }
         let project = projects[index]
 
-        // Workstreams require a git repo
         guard GitOperations.isGitRepo(at: project.directory) else { return }
 
         let existingNames = Set(project.workstreams.map(\.name))
@@ -267,7 +270,8 @@ struct ProjectSidebar: View {
             branchPrefix: branchPrefix
         )
 
-        let workstream = Workstream(name: name, worktreePath: worktreePath)
+        let bypass = bypassPermissions ?? defaultBypass
+        let workstream = Workstream(name: name, worktreePath: worktreePath, bypassPermissions: bypass)
         projects[index].workstreams.append(workstream)
         expandedProjects.insert(projectID)
         selection = .workstream(workstream.id)
@@ -399,6 +403,8 @@ private struct ProjectHeaderRow: View {
     let isExpanded: Bool
     let onToggle: (() -> Void)?
     let onAdd: () -> Void
+    let onAddWithPermissions: () -> Void
+    let onAddWithoutPermissions: () -> Void
     let onDelete: () -> Void
 
     @State private var isHovering = false
@@ -451,6 +457,14 @@ private struct ProjectHeaderRow: View {
             if isHovering {
                 HStack(spacing: 8) {
                     SidebarIconButton(icon: "plus", action: onAdd)
+                        .contextMenu {
+                            Button(action: onAddWithPermissions) {
+                                Label("New workstream (full permissions)", systemImage: "lock.open")
+                            }
+                            Button(action: onAddWithoutPermissions) {
+                                Label("New workstream (with prompts)", systemImage: "lock.shield")
+                            }
+                        }
                     SidebarIconButton(icon: "trash", action: onDelete)
                 }
             }

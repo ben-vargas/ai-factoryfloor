@@ -7,12 +7,14 @@ struct Workstream: Identifiable, Hashable, Codable {
     let id: UUID
     var name: String
     var worktreePath: String?
+    var bypassPermissions: Bool
     var lastAccessedAt: Date
 
-    init(name: String, worktreePath: String? = nil, id: UUID = UUID(), lastAccessedAt: Date = Date()) {
+    init(name: String, worktreePath: String? = nil, bypassPermissions: Bool = false, id: UUID = UUID(), lastAccessedAt: Date = Date()) {
         self.id = id
         self.name = name
         self.worktreePath = worktreePath
+        self.bypassPermissions = bypassPermissions
         self.lastAccessedAt = lastAccessedAt
     }
 

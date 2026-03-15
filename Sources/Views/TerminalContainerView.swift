@@ -36,11 +36,11 @@ struct TerminalContainerView: View {
     let workingDirectory: String
     let projectName: String
     let workstreamName: String
+    let bypassPermissions: Bool
 
     @EnvironmentObject var surfaceCache: TerminalSurfaceCache
     @EnvironmentObject var appEnv: AppEnvironment
     @AppStorage("ff2.defaultBrowser") private var defaultBrowser: String = ""
-    @AppStorage("ff2.bypassPermissions") private var bypassPermissions: Bool = false
     @State private var activeTab: WorkstreamTab = .claude
 
     private var claudeID: UUID { workstreamID }

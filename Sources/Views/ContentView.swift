@@ -53,7 +53,8 @@ struct ContentView: View {
                     workstreamID: workstream.id,
                     workingDirectory: workstream.workingDirectory(projectDirectory: project.directory),
                     projectName: project.name,
-                    workstreamName: workstream.name
+                    workstreamName: workstream.name,
+                    bypassPermissions: workstream.bypassPermissions
                 )
                 .id(workstream.id)
                 .navigationTitle(workstream.name)
