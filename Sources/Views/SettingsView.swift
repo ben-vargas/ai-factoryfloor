@@ -101,8 +101,8 @@ struct SettingsView: View {
                     .foregroundStyle(.tertiary)
             }
 
-            // MARK: - Terminal
-            Section("Terminal") {
+            // MARK: - Terminal & Browser
+            Section("Terminal & Browser") {
                 Toggle("Tmux Mode", isOn: $tmuxMode)
                     .disabled(!appEnv.toolStatus.tmux.isInstalled)
                 Text("Makes sessions persist across app restarts. Sessions are lost on system restart.")
@@ -121,6 +121,13 @@ struct SettingsView: View {
                         Text(app.name).tag(app.bundleID)
                     }
                 }
+
+                Picker("External Browser", selection: $defaultBrowser) {
+                    Text("System Default").tag("")
+                    ForEach(appEnv.installedBrowsers) { app in
+                        Text(app.name).tag(app.bundleID)
+                    }
+                }
             }
 
             // MARK: - Coding Agent
@@ -134,16 +141,6 @@ struct SettingsView: View {
                 Text("Enables experimental multi-agent coordination. Agents can spawn teammates, delegate tasks, and collaborate across workstreams.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-            }
-
-            // MARK: - Applications
-            Section("Applications") {
-                Picker("Default External Browser", selection: $defaultBrowser) {
-                    Text("System Default").tag("")
-                    ForEach(appEnv.installedBrowsers) { app in
-                        Text(app.name).tag(app.bundleID)
-                    }
-                }
             }
 
             // MARK: - Appearance
