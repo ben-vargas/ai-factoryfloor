@@ -81,7 +81,7 @@ struct WorkstreamInfoView: View {
                 // Rendered document
                 if let selected = selectedDoc,
                    let doc = docFiles.first(where: { $0.name == selected }) {
-                    MarkdownView(markdown: doc.content)
+                    MarkdownContentView(markdown: doc.content)
                         .id(selected)
                 } else {
                     Spacer()
