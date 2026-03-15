@@ -1,5 +1,70 @@
 # ff2 Project Instructions
 
+## Development Workflow
+
+### Build, Test, Run
+```bash
+./dev.sh build          # Debug build (xcodegen generate + xcodebuild)
+./dev.sh build-release  # Release build (optimized)
+./dev.sh test           # Run XCTest suite
+./dev.sh br             # Build and run (debug)
+./dev.sh br-release     # Build and run (release)
+./dev.sh run [dir]      # Run existing build (uses ff2:// URL scheme)
+./dev.sh clean          # Nuke build artifacts
+```
+
+### After code changes
+1. Build: `xcodebuild -project ff2.xcodeproj -scheme ff2 -configuration Debug build`
+   - If you added/removed files or changed `project.yml`: run `xcodegen generate` first
+2. Kill and relaunch: `pkill -f "ff2.app/Contents/MacOS/ff2"; sleep 1; open "ff2:///path"`
+3. If tmux mode was on, also kill the tmux server: `tmux -L ff2 kill-server`
+4. If you changed the tmux config: `rm -f ~/.ff2/tmux.conf` (it regenerates on launch)
+
+### When to regenerate the Xcode project
+Run `xcodegen generate` when:
+- Adding or removing Swift source files
+- Adding or removing localization files (lproj)
+- Changing `project.yml` (build settings, dependencies, targets)
+
+Do NOT edit `ff2.xcodeproj` directly. It is generated from `project.yml`.
+
+### Running tests
+```bash
+xcodebuild -project ff2.xcodeproj -scheme ff2Tests -configuration Debug test
+```
+Tests are in `Tests/`. The test target links against the app target.
+
+## Architecture
+
+- **SwiftUI sidebar** + **AppKit terminal views** (Metal GPU-rendered via libghostty)
+- **XcodeGen** for project generation (`project.yml` -> xcodeproj)
+- **Ghostty** as git submodule, xcframework built with `zig build`
+- **Bridging header** approach for GhosttyKit (not module import)
+- **Single-window** app via `Window` (not `WindowGroup`)
+- **`ff2://`** URL scheme for single-instance behavior
+- **AppConstants.appID** is the single place to change when renaming the app
+
+### Key directories
+- `Sources/Models/` - Data models, git operations, tmux, name generator, app constants
+- `Sources/Terminal/` - Ghostty integration (TerminalApp singleton, TerminalView NSView)
+- `Sources/Views/` - SwiftUI views (sidebar, settings, project overview, tabs, browser)
+- `Localization/` - lproj directories with Localizable.strings
+- `Resources/` - Info.plist, entitlements
+- `ghostty/` - Git submodule (do not modify, rebuild xcframework with `./dev.sh build-ghostty`)
+
+### Data flow
+- **Projects/workstreams** stored in UserDefaults as JSON, accessed via `ProjectStore`
+- **Settings** use `@AppStorage` (UserDefaults)
+- **Terminal surfaces** cached in `TerminalSurfaceCache` (keyed by UUID)
+- **Git repo info** cached in `AppEnvironment`, refreshed async every 15s
+- **Tool detection** runs at startup in `AppEnvironment.refresh()`
+
+### Workstream lifecycle
+1. Creating a workstream: generates name, runs `git worktree add`, stores worktree path
+2. Terminal tabs: Coding Agent runs claude (with session-id for resume), Terminal runs shell
+3. Tmux mode: wraps commands in `tmux new-session -A` on a dedicated socket (`-L ff2`)
+4. Archiving: runs `git worktree remove` + `tmux kill-session` in background
+
 ## Localization
 
 All user-facing strings MUST use localization. Never hardcode strings directly in SwiftUI views or code.
@@ -7,42 +72,30 @@ All user-facing strings MUST use localization. Never hardcode strings directly i
 ### Rules
 - **SwiftUI Text/Button/Label**: Use string literals directly (e.g., `Text("Cancel")`). SwiftUI automatically treats these as `LocalizedStringKey` and looks them up in `Localizable.strings`.
 - **AppKit APIs** (NSOpenPanel, NSAlert, etc.): Use `NSLocalizedString("string", comment: "")`.
-- **String interpolation in Text**: Works automatically. `Text("Remove \(name)")` generates the right localization key.
-- **Enum raw values used in UI** (like `ProjectSortOrder`): These need manual localization if displayed.
-- **Every new user-facing string** must be added to `Resources/en.lproj/Localizable.strings`.
+- **String interpolation with Images**: Split into `Text` concatenation, not inline interpolation. E.g., `(Text("Press ") + Text(Image(systemName: "command")) + Text(" N"))`.
+- **Every new user-facing string** must be added to `Localization/en.lproj/Localizable.strings` and all other locale files.
+- Current locales: English (en), Catalan (ca), Spanish (es), Swedish (sv).
 
 ### Adding a new string
 1. Use the string in code as described above
-2. Add the English key-value pair to `Resources/en.lproj/Localizable.strings`
-3. Add translations to any other `xx.lproj/Localizable.strings` files that exist
+2. Add the English key-value pair to `Localization/en.lproj/Localizable.strings`
+3. Add translations to all other `Localization/xx.lproj/Localizable.strings` files
 
 ### Adding a new language
-1. Copy `Resources/en.lproj` to `Resources/xx.lproj` (e.g., `es.lproj` for Spanish)
-2. Translate all values in `Localizable.strings` (keep the keys unchanged)
-3. Run `xcodegen generate` to pick up the new lproj directory
-4. The app will auto-select the language based on macOS system preferences, or the user can override it in Settings
+1. Copy `Localization/en.lproj` to `Localization/xx.lproj`
+2. Translate all values in `Localizable.strings` (keep keys unchanged)
+3. Add the new lproj path to `project.yml` under sources (with `buildPhase: resources`)
+4. Run `xcodegen generate`
 
 ### Extracting strings
-To find hardcoded strings that should be localized:
 ```bash
 grep -rn 'Text("' Sources/ | grep -v '//'
 grep -rn 'Button("' Sources/ | grep -v '//'
 grep -rn 'Label("' Sources/ | grep -v '//'
 ```
 
-## Build & Run
-- `./dev.sh build` - Debug build
-- `./dev.sh build-release` - Release build (optimized)
-- `./dev.sh test` - Run tests
-- `./dev.sh br` - Build and run (debug)
-- `./dev.sh br-release` - Build and run (release)
-- `./dev.sh run [dir]` - Run (uses URL scheme, works with running instance)
-- `./dev.sh clean` - Clean build artifacts
-
-## Architecture
-- SwiftUI sidebar + AppKit terminal views (Metal GPU-rendered via libghostty)
-- XcodeGen for project generation (`project.yml` -> xcodeproj, do not edit xcodeproj directly)
-- Ghostty as git submodule, xcframework built with `zig build`
-- Bridging header approach for GhosttyKit (not module import)
-- Single-window app via `Window` (not `WindowGroup`)
-- `ff2://` URL scheme for single-instance behavior
+## Naming
+- The app ID is `ff2` (working name, will change). Use `AppConstants.appID` not hardcoded strings.
+- Use "directory" not "folder" in all user-facing text.
+- Use "Coding Agent" for the claude terminal tab, not "Claude Code".
+- Use "workstream" for the sub-units of a project.
