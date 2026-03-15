@@ -23,6 +23,8 @@ enum TmuxSession {
         set -g escape-time 0
         set -g allow-passthrough on
         set -g default-terminal "xterm-256color"
+        set -g remain-on-exit on
+        set-hook -g pane-died 'respawn-pane'
         """
         // Write config if missing or outdated
         let fm = FileManager.default
