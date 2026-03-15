@@ -18,7 +18,7 @@ enum TmuxSession {
         set -g status off
         set -g prefix None
         unbind-key -a
-        set -g mouse on
+        set -g mouse off
         set -g history-limit 50000
         set -g escape-time 0
         set -g allow-passthrough on
