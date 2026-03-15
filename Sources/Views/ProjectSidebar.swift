@@ -121,6 +121,9 @@ struct ProjectSidebar: View {
             }
             .onChange(of: selection) { _, sel in
                 guard let sel else { return }
+                if case .project(let pid) = sel {
+                    expandedProjects.insert(pid)
+                }
                 if case .workstream(let wsID) = sel,
                    let (pi, _) = workstreamIndex[wsID] {
                     expandedProjects.insert(projects[pi].id)
