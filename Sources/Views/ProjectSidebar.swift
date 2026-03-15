@@ -99,6 +99,7 @@ struct ProjectSidebar: View {
                         ForEach(sortedWS) { workstream in
                             WorkstreamRow(
                                 name: workstream.name,
+                                branchName: appEnv.branchName(for: workstream.worktreePath),
                                 isPathValid: appEnv.isPathValid(workstream.worktreePath),
                                 onArchive: { confirmArchive(workstream) }
                             )
@@ -544,6 +545,7 @@ private struct ProjectHeaderRow: View {
 
 private struct WorkstreamRow: View {
     let name: String
+    var branchName: String?
     let isPathValid: Bool
     let onArchive: () -> Void
 
@@ -552,10 +554,22 @@ private struct WorkstreamRow: View {
     var body: some View {
         HStack {
             Label {
-                Text(name)
-                    .font(.system(.body))
-                    .strikethrough(!isPathValid)
-                    .foregroundStyle(isPathValid ? .primary : .secondary)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(name)
+                        .font(.system(.body))
+                        .strikethrough(!isPathValid)
+                        .foregroundStyle(isPathValid ? .primary : .secondary)
+                    if let branchName, isPathValid {
+                        HStack(spacing: 3) {
+                            Image(systemName: "arrow.triangle.branch")
+                                .font(.system(size: 9))
+                            Text(branchName)
+                                .font(.system(size: 10))
+                        }
+                        .foregroundStyle(.tertiary)
+                        .lineLimit(1)
+                    }
+                }
             } icon: {
                 Image(systemName: isPathValid ? "terminal" : "exclamationmark.triangle")
                     .foregroundStyle(isPathValid ? Color.secondary : Color.orange)

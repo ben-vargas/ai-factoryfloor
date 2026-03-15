@@ -17,6 +17,9 @@ final class AppEnvironment: ObservableObject {
     // Worktree path validity cache
     @Published private var pathValidityCache: [String: Bool] = [:]
 
+    // Branch name cache per worktree path
+    @Published private var branchNameCache: [String: String] = [:]
+
     // GitHub info cache
     @Published private var githubRepoCache: [String: GitHubRepoInfo] = [:]
     @Published private var githubPRCache: [String: [GitHubPR]] = [:]
@@ -90,6 +93,11 @@ final class AppEnvironment: ObservableObject {
         return pathValidityCache[path] ?? true
     }
 
+    func branchName(for worktreePath: String?) -> String? {
+        guard let path = worktreePath else { return nil }
+        return branchNameCache[path]
+    }
+
     /// Returns IDs of projects whose directories no longer exist.
     @Published var missingProjectIDs: Set<UUID> = []
 
@@ -97,6 +105,7 @@ final class AppEnvironment: ObservableObject {
         Task.detached {
             var results: [String: Bool] = [:]
             var missing: Set<UUID> = []
+            var branches: [String: String] = [:]
 
             for project in projects {
                 // Check project directory
@@ -106,15 +115,23 @@ final class AppEnvironment: ObservableObject {
                     missing.insert(project.id)
                 }
 
-                // Check worktree paths
+                // Check worktree paths and branch names
                 for ws in project.workstreams {
                     guard let path = ws.worktreePath else { continue }
                     var wsIsDir: ObjCBool = false
-                    results[path] = FileManager.default.fileExists(atPath: path, isDirectory: &wsIsDir) && wsIsDir.boolValue
+                    let valid = FileManager.default.fileExists(atPath: path, isDirectory: &wsIsDir) && wsIsDir.boolValue
+                    results[path] = valid
+                    if valid {
+                        let info = GitOperations.repoInfo(at: path)
+                        if let branch = info.branch {
+                            branches[path] = branch
+                        }
+                    }
                 }
             }
             await MainActor.run {
                 self.pathValidityCache.merge(results) { _, new in new }
+                self.branchNameCache.merge(branches) { _, new in new }
                 self.missingProjectIDs = missing
             }
         }
