@@ -74,7 +74,11 @@ struct HelpView: View {
                     Link("davidpoblador.com", destination: URL(string: "https://davidpoblador.com")!)
                         .font(.caption)
                 }
-                .padding(.bottom, 32)
+                .padding(.bottom, 16)
+
+                PoblenouSkylineView()
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 20)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

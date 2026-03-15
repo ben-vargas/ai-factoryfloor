@@ -92,12 +92,19 @@ struct ContentView: View {
                 .navigationTitle(project.name)
                 .navigationSubtitle("ff2")
             } else {
-                VStack(spacing: 12) {
-                    Text("No project selected")
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
-                    Text("Add a project from the sidebar to get started.")
-                        .foregroundStyle(.tertiary)
+                VStack {
+                    Spacer()
+                    VStack(spacing: 12) {
+                        Text("No project selected")
+                            .font(.title2)
+                            .foregroundStyle(.secondary)
+                        Text("Add a project from the sidebar to get started.")
+                            .foregroundStyle(.tertiary)
+                    }
+                    Spacer()
+                    PoblenouSkylineView()
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 20)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .navigationTitle("ff2")

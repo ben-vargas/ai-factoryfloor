@@ -99,6 +99,21 @@ grep -rn 'Label("' Sources/ | grep -v '//'
 - **next.md**: Parked feature requests to tackle in the next session.
 - When you notice something that should be done later, add it to the appropriate file immediately.
 
+## Keyboard Shortcuts
+When adding, removing, or changing keyboard shortcuts:
+1. Update `FF2App.swift` (menu commands)
+2. Update `TerminalContainerView.swift` (tab bar labels and handlers)
+3. Update `HelpView.swift` (shortcut reference)
+4. Update `README.md` (shortcut table)
+
+Current shortcuts are context-sensitive via `switchByNumber`:
+- **Cmd+0**: project view (from workstream)
+- **Cmd+1-9**: in project view = jump to Nth workstream; in workstream view = switch tabs (1=info, 2=agent, 3=terminal, 4=browser)
+- **Cmd+Shift+[/]**: cycle tabs
+- **Cmd+Shift+O**: external browser
+- **Cmd+Shift+E**: external terminal
+- **Cmd+Shift+/**: help
+
 ## Naming
 - The app ID is `ff2` (working name, will change). Use `AppConstants.appID` not hardcoded strings.
 - Use "directory" not "folder" in all user-facing text.
