@@ -14,6 +14,9 @@ final class AppEnvironment: ObservableObject {
     @Published private var repoInfoCache: [String: GitRepoInfo] = [:]
     private var repoInfoTimestamps: [String: Date] = [:]
 
+    // Worktree path validity cache
+    @Published private var pathValidityCache: [String: Bool] = [:]
+
     func refresh() {
         isDetecting = true
         Task.detached {
@@ -71,6 +74,29 @@ final class AppEnvironment: ObservableObject {
                 await MainActor.run {
                     self.repoInfoCache[dir] = info
                 }
+            }
+        }
+    }
+
+    // MARK: - Path Validity
+
+    func isPathValid(_ path: String?) -> Bool {
+        guard let path else { return true } // No worktree path means using project dir
+        return pathValidityCache[path] ?? true // Assume valid until checked
+    }
+
+    func refreshPathValidity(projects: [Project]) {
+        Task.detached {
+            var results: [String: Bool] = [:]
+            for project in projects {
+                for ws in project.workstreams {
+                    guard let path = ws.worktreePath else { continue }
+                    var isDir: ObjCBool = false
+                    results[path] = FileManager.default.fileExists(atPath: path, isDirectory: &isDir) && isDir.boolValue
+                }
+            }
+            await MainActor.run {
+                self.pathValidityCache.merge(results) { _, new in new }
             }
         }
     }

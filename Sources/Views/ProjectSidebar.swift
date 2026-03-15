@@ -97,6 +97,7 @@ struct ProjectSidebar: View {
                         ForEach(sortedWS) { workstream in
                             WorkstreamRow(
                                 name: workstream.name,
+                                isPathValid: appEnv.isPathValid(workstream.worktreePath),
                                 onArchive: { archiveWorkstream(workstream.id, in: &projectBind.wrappedValue) }
                             )
                             .tag(SidebarSelection.workstream(workstream.id))
@@ -279,6 +280,7 @@ struct ProjectSidebar: View {
     }
 
     @EnvironmentObject private var surfaceCache: TerminalSurfaceCache
+    @EnvironmentObject private var appEnv: AppEnvironment
 
     private func archiveWorkstream(_ workstreamID: UUID, in project: inout Project) {
         if let ws = project.workstreams.first(where: { $0.id == workstreamID }) {
@@ -486,14 +488,22 @@ private struct ProjectHeaderRow: View {
 
 private struct WorkstreamRow: View {
     let name: String
+    let isPathValid: Bool
     let onArchive: () -> Void
 
     @State private var isHovering = false
 
     var body: some View {
         HStack {
-            Label(name, systemImage: "terminal")
-                .font(.system(.body))
+            Label {
+                Text(name)
+                    .font(.system(.body))
+                    .strikethrough(!isPathValid)
+                    .foregroundStyle(isPathValid ? .primary : .secondary)
+            } icon: {
+                Image(systemName: isPathValid ? "terminal" : "exclamationmark.triangle")
+                    .foregroundStyle(isPathValid ? Color.secondary : Color.orange)
+            }
 
             Spacer()
 
