@@ -62,7 +62,7 @@ struct TerminalContainerView: View {
                 flags += " --dangerously-skip-permissions"
             }
             // Try resuming the workstream's session, fall back to creating one with a fixed ID
-            cmd = "sh -c \"\(basePath) --resume \(sessionID) \(flags) 2>/dev/null || \(basePath) --session-id \(sessionID) \(flags)\""
+            cmd = "sh -c \"\(basePath) --resume \(sessionID) \(flags) 2>/dev/null || (echo 'Starting new session...' && \(basePath) --session-id \(sessionID) \(flags))\""
         }
 
         if useTmux, let tmuxPath = appEnv.toolStatus.tmux.path {
