@@ -23,7 +23,7 @@ struct WorkstreamInfoView: View {
         var id: String { name }
     }
 
-    private static let docFileNames = ["README.md", "CLAUDE.md"]
+    private static let docFileNames = ["README.md", "CLAUDE.md", "AGENTS.md"]
 
     var body: some View {
         GeometryReader { geo in
@@ -119,7 +119,7 @@ struct WorkstreamInfoView: View {
                     .scrollDisabled(true)
                 }
             }
-            .frame(height: docExpanded ? geo.size.height * 0.3 : geo.size.height * 0.7)
+            .frame(height: docExpanded ? geo.size.height * 0.2 : geo.size.height * 0.5)
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.2)) { docExpanded = false }
             }
@@ -199,6 +199,8 @@ struct DirectoryRow: View {
     let path: String
     var defaultTerminal: String = ""
 
+    @State private var copied = false
+
     var body: some View {
         HStack(spacing: 4) {
             Text(abbreviatePath(path))
@@ -207,36 +209,67 @@ struct DirectoryRow: View {
                 .lineLimit(1)
                 .truncationMode(.middle)
 
-            Button(action: copyPath) {
-                Image(systemName: "doc.on.doc")
-                    .font(.system(size: 9))
-                    .foregroundStyle(.tertiary)
+            DirectoryActionButton(
+                icon: copied ? "checkmark" : "doc.on.doc",
+                color: copied ? .green : nil,
+                tooltip: "Copy path"
+            ) {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(path, forType: .string)
+                copied = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
             }
-            .buttonStyle(.plain)
-            .help("Copy path")
 
-            Button(action: openInTerminal) {
-                Image(systemName: "terminal")
-                    .font(.system(size: 9))
-                    .foregroundStyle(.tertiary)
+            DirectoryActionButton(
+                icon: "terminal",
+                tooltip: "Open in external terminal"
+            ) {
+                openInTerminal()
             }
-            .buttonStyle(.plain)
-            .help("Open in external terminal")
         }
     }
 
-    private func copyPath() {
-        NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(path, forType: .string)
-    }
-
     private func openInTerminal() {
-        if !defaultTerminal.isEmpty,
-           let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: defaultTerminal) {
-            let config = NSWorkspace.OpenConfiguration()
-            NSWorkspace.shared.open([URL(fileURLWithPath: path)], withApplicationAt: appURL, configuration: config)
+        let escaped = path.replacingOccurrences(of: "\"", with: "\\\"")
+
+        if !defaultTerminal.isEmpty {
+            // Use AppleScript to tell the configured terminal to cd
+            let appName: String
+            switch defaultTerminal {
+            case "com.mitchellh.ghostty": appName = "Ghostty"
+            case "com.googlecode.iterm2": appName = "iTerm"
+            case "dev.warp.Warp-Stable": appName = "Warp"
+            case "org.alacritty": appName = "Alacritty"
+            case "net.kovidgoyal.kitty": appName = "kitty"
+            default: appName = "Terminal"
+            }
+
+            if appName == "iTerm" {
+                let script = """
+                tell application "iTerm"
+                    activate
+                    create window with default profile command "/bin/zsh"
+                    tell current session of current window
+                        write text "cd \(escaped) && clear"
+                    end tell
+                end tell
+                """
+                if let appleScript = NSAppleScript(source: script) {
+                    appleScript.executeAndReturnError(nil)
+                }
+            } else {
+                // Generic: open the app then use Terminal-style AppleScript
+                let script = "tell application \"\(appName)\" to activate"
+                if let appleScript = NSAppleScript(source: script) {
+                    appleScript.executeAndReturnError(nil)
+                }
+                // Use open command with the directory
+                let process = Process()
+                process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
+                process.arguments = ["-b", defaultTerminal, path]
+                try? process.run()
+            }
         } else {
-            let escaped = path.replacingOccurrences(of: "\"", with: "\\\"")
             let script = "tell application \"Terminal\" to do script \"cd \(escaped) && clear\""
             if let appleScript = NSAppleScript(source: script) {
                 appleScript.executeAndReturnError(nil)
@@ -250,6 +283,29 @@ struct DirectoryRow: View {
             return "~" + p.dropFirst(home.count)
         }
         return p
+    }
+}
+
+private struct DirectoryActionButton: View {
+    let icon: String
+    var color: Color? = nil
+    let tooltip: String
+    let action: () -> Void
+
+    @State private var isHovering = false
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.system(size: 9))
+                .foregroundStyle(color ?? (isHovering ? Color.primary : Color.secondary))
+                .frame(width: 16, height: 16)
+                .background(isHovering ? Color.primary.opacity(0.1) : .clear)
+                .clipShape(RoundedRectangle(cornerRadius: 3))
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovering = $0 }
+        .help(tooltip)
     }
 }
 
