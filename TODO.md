@@ -1,14 +1,10 @@
 # TODO
 
 ## Pre-release
-- [ ] Choose final app name (currently "ff2" is a working name)
-- [ ] Update bundle ID (`com.ff2.app` in project.yml), URL scheme, AppConstants
-- [ ] Build and ship a standalone CLI binary (like `code` for VS Code)
-- [ ] Homebrew cask for installation
+- [ ] Homebrew tap (alltuner/homebrew-tap) and cask formula
 - [ ] Code signing and notarization for distribution
 - [ ] All Tuner Labs logo image in help view (needs asset)
 - [ ] Occlude non-visible terminal surfaces to save GPU (reverted, needs careful timing)
-- [ ] GitHub Pages deploy workflow for website
 - [ ] Sidebar visual polish (custom styling beyond default SwiftUI)
 
 ## Future
@@ -47,7 +43,7 @@
 - [x] Settings: environment detection, tmux, bypass, teams, auto-rename, appearance, language, base dir, branch prefix, external apps, danger zone
 - [x] Project overview with editable alias, git/GitHub info, workstream list
 - [x] Drag-and-drop directories to sidebar
-- [x] ff2:// URL scheme for single-instance behavior
+- [x] factoryfloor:// URL scheme for single-instance behavior
 - [x] CLI launch with directory argument
 - [x] Auto-generated workstream names (operation-adjective-component)
 - [x] Async git repo info, path validity, GitHub data with periodic refresh
@@ -68,7 +64,7 @@
 - [x] Extract env var injection logic to WorkstreamEnvironment module
 - [x] Tmux mode limited to Coding Agent only (Terminal tab uses plain shell)
 - [x] Tmux aggressive-resize and window-size latest to prevent size revert
-- [x] Script config: .ff2.json with fallback to emdash/conductor/superset formats
+- [x] Script config: .factoryfloor.json with fallback to emdash/conductor/superset formats
 - [x] Setup tab (Cmd+5): auto-runs setup script on workstream creation
 - [x] Run tab (Cmd+6): on-demand dev server via run script
 - [x] Teardown script runs before worktree removal on archive
@@ -76,6 +72,14 @@
 - [x] Script info displayed in workstream Info tab
 - [x] App icon (factory floor + Poblenou skyline)
 - [x] Landing page website with Tailwind CSS build
+- [x] Rename to Factory Floor (bundle ID, URL scheme, config dir, all references)
+- [x] Hugo website with asset versioning (MD5 query params)
+- [x] GitHub Pages deploy workflow
+- [x] Release-please for automated versioning
+- [x] CLI launcher script (ff --install)
+- [x] Distribution guide (Homebrew, notarization, Sparkle)
+- [x] Umami analytics integration
+- [x] GitHub repo at alltuner/factory-floor
 
 ## Probably not needed
 - [ ] Claude Agent SDK integration (TypeScript): CLI + tmux + session-id covers our needs
