@@ -22,7 +22,7 @@ struct ProjectSidebar: View {
     @State private var projectToDelete: UUID?
     @State private var workstreamToArchive: UUID?
     @State private var archiveWarningDirty = false
-    @State private var expandedProjects: Set<UUID> = []
+    @State private var expandedProjects: Set<UUID> = SidebarState.loadExpanded()
     @State private var cachedSortedIDs: [UUID] = []
     @AppStorage("factoryfloor.sortOrder") private var sortOrder: ProjectSortOrder = .recent
 
@@ -193,6 +193,7 @@ struct ProjectSidebar: View {
         }
         .onAppear { cachedSortedIDs = recomputeSortedIDs() }
         .onChange(of: sortOrder) { _, _ in cachedSortedIDs = recomputeSortedIDs() }
+        .onChange(of: expandedProjects) { _, newValue in SidebarState.saveExpanded(newValue) }
         .onChange(of: projects.count) { _, _ in cachedSortedIDs = recomputeSortedIDs() }
         .overlay {
             if isDropTargeted {

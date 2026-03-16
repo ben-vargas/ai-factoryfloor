@@ -5,7 +5,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var projects: [Project] = ProjectStore.load()
-    @State private var selection: SidebarSelection? = ContentView.initialSelection()
+    @State private var selection: SidebarSelection? = SidebarSelection.loadSaved() ?? ContentView.initialSelection()
     @State private var selectionBeforeSettings: SidebarSelection?
     @StateObject private var surfaceCache = TerminalSurfaceCache()
     @StateObject private var appEnvironment = AppEnvironment()
@@ -221,6 +221,7 @@ struct ContentView: View {
             if newValue == .settings {
                 selectionBeforeSettings = oldValue
             }
+            newValue?.save()
         }
         .onKeyPress(.escape) {
             if selection == .settings || selection == .help {
