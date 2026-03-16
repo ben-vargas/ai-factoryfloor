@@ -153,17 +153,19 @@ struct ProjectSidebar: View {
                 // Credit
                 VStack(spacing: 3) {
                     HStack(spacing: 0) {
-                        Text("Made by ")
+                        Text("by ")
                             .foregroundStyle(.tertiary)
-                        Link("David Poblador i Garcia", destination: URL(string: "https://davidpoblador.com/")!)
+                        Link("David Poblador i Garcia.", destination: URL(string: "https://davidpoblador.com/")!)
                             .foregroundStyle(.secondary)
                     }
                     .font(.system(size: 10))
                     HStack(spacing: 0) {
-                        Text("If useful, help ")
+                        Text("Help ")
                             .foregroundStyle(.tertiary)
-                        Link("supporting the development", destination: URL(string: "https://factory-floor.com/fund")!)
+                        Link("supporting", destination: URL(string: "https://factory-floor.com/fund")!)
                             .foregroundStyle(.secondary)
+                        Text(" the development.")
+                            .foregroundStyle(.tertiary)
                     }
                     .font(.system(size: 10))
                 }
