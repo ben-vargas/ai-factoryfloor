@@ -7,7 +7,7 @@ set -e
 PROJECT="FactoryFloor.xcodeproj"
 SCHEME="FactoryFloor"
 TEST_SCHEME="FactoryFloorTests"
-APP_NAME="Factory Floor"
+APP_NAME="Factory Floor Debug"
 URL_SCHEME="factoryfloor"
 
 case "${1:-build}" in

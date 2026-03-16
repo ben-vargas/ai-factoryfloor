@@ -1,12 +1,19 @@
 // ABOUTME: Central place for app-wide constants.
-// ABOUTME: Change appID/appName here when the app is renamed.
+// ABOUTME: Debug builds use separate IDs so they can run alongside release builds.
 
 import Foundation
 
 enum AppConstants {
+    #if DEBUG
+    static let appID = "factoryfloor-debug"
+    static let appName = "Factory Floor Debug"
+    #else
     static let appID = "factoryfloor"
     static let appName = "Factory Floor"
-    /// Config directory: ~/.config/factoryfloor/ (respects XDG_CONFIG_HOME)
+    #endif
+
+    /// Config directory: ~/.config/factoryfloor[-debug]/ (respects XDG_CONFIG_HOME).
+    /// Falls back to the release config directory if the debug one doesn't exist.
     static var configDirectory: URL {
         let configBase: URL
         if let xdg = ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"], !xdg.isEmpty {
@@ -14,15 +21,27 @@ enum AppConstants {
         } else {
             configBase = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".config")
         }
-        return configBase.appendingPathComponent(appID)
+        let dir = configBase.appendingPathComponent(appID)
+        #if DEBUG
+        if !FileManager.default.fileExists(atPath: dir.path) {
+            let releaseDir = configBase.appendingPathComponent("factoryfloor")
+            if FileManager.default.fileExists(atPath: releaseDir.path) {
+                return releaseDir
+            }
+        }
+        #endif
+        return dir
     }
 
-    /// Data directory: ~/.factoryfloor/ (worktrees, tmux config, prompts)
+    /// Data directory: ~/.factoryfloor[-debug]/ (tmux config, per-build state)
     static var dataDirectory: URL {
         FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".\(appID)")
     }
 
+    /// Worktrees are always shared between debug and release builds.
     static var worktreesDirectory: URL {
-        dataDirectory.appendingPathComponent("worktrees")
+        FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent(".factoryfloor")
+            .appendingPathComponent("worktrees")
     }
 }

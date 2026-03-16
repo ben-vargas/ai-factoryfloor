@@ -39,8 +39,6 @@ targets:
         buildPhase: resources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.alltuner.factoryfloor
-        PRODUCT_NAME: Factory Floor
         PRODUCT_MODULE_NAME: FactoryFloor
         INFOPLIST_FILE: Resources/Info.plist
         CODE_SIGN_ENTITLEMENTS: Resources/ff2.entitlements
@@ -64,6 +62,15 @@ targets:
           - -framework AppKit
           - -framework IOKit
           - -framework Carbon
+      configs:
+        Debug:
+          PRODUCT_BUNDLE_IDENTIFIER: com.alltuner.factoryfloor.debug
+          PRODUCT_NAME: Factory Floor Debug
+          INFOPLIST_KEY_CFBundleDisplayName: Factory Floor Debug
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+        Release:
+          PRODUCT_BUNDLE_IDENTIFIER: com.alltuner.factoryfloor
+          PRODUCT_NAME: Factory Floor
     dependencies:
       - package: MarkdownView
 
@@ -78,4 +85,4 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.alltuner.factoryfloor.tests
         GENERATE_INFOPLIST_FILE: true
-        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Factory Floor.app/Contents/MacOS/Factory Floor"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Factory Floor Debug.app/Contents/MacOS/Factory Floor Debug"
