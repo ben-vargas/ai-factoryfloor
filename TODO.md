@@ -1,6 +1,7 @@
 # TODO
 
 ## Pre-release
+
 - [x] Homebrew tap (alltuner/homebrew-tap) and cask formula
 - [x] CI: automate build, sign, notarize, DMG, and release upload via GitHub Actions (secrets need configuring, see docs/distribution.md)
 - [x] Confirm before quit (Cmd+Q) when workstreams are active
@@ -10,8 +11,10 @@
 - [x] CONTRIBUTING.md guide
 - [x] CODE_OF_CONDUCT.md
 - [x] Funding: add Buy Me a Coffee and GitHub Sponsors options (website + FUNDING.yml)
+- [ ] Website: favicon, OG image, SEO meta tags
 
 ## Future
+
 - [ ] External Chrome integration: launch with --remote-debugging-port for WebMCP/CDP
 - [ ] PR management: create and manage PRs from workstreams (currently view-only)
 - [ ] Auto-update mechanism (Sparkle or similar)
@@ -30,6 +33,7 @@
 - [ ] Restore full app state on launch (active tab within workstream; sidebar selection and expanded state already persisted)
 
 ## Done
+
 - [x] Embedded Ghostty terminals (Metal GPU-rendered via libghostty)
 - [x] Project and workstream management with sidebar tree
 - [x] Git worktrees for workstreams (branch off default branch)

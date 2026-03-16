@@ -88,7 +88,7 @@ Every workstream terminal has access to:
 | `Cmd+L` | Address bar (browser) |
 | `Cmd+0` | Back to project |
 | `Cmd+1-9` | Switch tab |
-| `Cmd+Shift+1-9` | Switch workstream |
+| `Ctrl+1-9` | Switch workstream |
 | `Cmd+Shift+[` / `]` | Cycle tabs |
 | `Cmd+Shift+O` | External browser |
 | `Cmd+Shift+E` | External terminal |

@@ -175,7 +175,7 @@ struct FF2App: App {
                 }
                 ForEach(1...9, id: \.self) { n in
                     Button("Switch to Workstream \(n)") { NotificationCenter.default.post(name: .switchToWorkstream, object: n) }
-                        .keyboardShortcut(KeyEquivalent(Character("\(n)")), modifiers: [.command, .shift])
+                        .keyboardShortcut(KeyEquivalent(Character("\(n)")), modifiers: .control)
                 }
             }
         }

@@ -199,6 +199,12 @@ struct ContentView: View {
                 selection = .project(project.id)
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .nextTab)) { _ in
+            cycleWorkstream(direction: 1)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .prevTab)) { _ in
+            cycleWorkstream(direction: -1)
+        }
         .onReceive(Timer.publish(every: 15, on: .main, in: .common).autoconnect()) { _ in
             appEnvironment.refreshAllRepoInfo(projects: projects)
             appEnvironment.refreshPathValidity(projects: projects)
@@ -288,6 +294,23 @@ struct ContentView: View {
         }
         if changed {
             ProjectStore.save(projects)
+        }
+    }
+
+    /// Cycle through workstreams within the active project.
+    /// Only acts when a project or workstream is selected (not settings/help).
+    private func cycleWorkstream(direction: Int) {
+        guard let project = activeProject else { return }
+        let sorted = project.workstreams.sorted { $0.lastAccessedAt > $1.lastAccessedAt }
+        guard !sorted.isEmpty else { return }
+
+        if let wsID = selection?.workstreamID,
+           let currentIndex = sorted.firstIndex(where: { $0.id == wsID }) {
+            let next = (currentIndex + direction + sorted.count) % sorted.count
+            selection = .workstream(sorted[next].id)
+        } else if case .project = selection {
+            // In project view: jump to first/last workstream
+            selection = .workstream(direction > 0 ? sorted.first!.id : sorted.last!.id)
         }
     }
 

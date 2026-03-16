@@ -331,7 +331,7 @@ private struct WorkstreamRow: View {
                 .frame(minHeight: 36, alignment: .leading)
                 Spacer()
                 if let n = shortcutNumber {
-                    Text("\(Image(systemName: "command"))\(n)")
+                    Text("\(Image(systemName: "control"))\(n)")
                         .font(.system(size: 11))
                         .foregroundStyle(.secondary)
                         .padding(.trailing, 4)

@@ -76,7 +76,7 @@ struct HelpView: View {
                     }
 
                     Section {
-                        ShortcutRow(keys: "1-9", shift: true, description: "Switch workstream")
+                        ShortcutRow(keys: "1-9", ctrl: true, cmd: false, description: "Switch workstream")
                     } header: {
                         ShortcutSectionHeader(title: "Navigation", description: "Works from any view in a project")
                     }
@@ -130,16 +130,17 @@ private struct ShortcutSectionHeader: View {
 
 private struct ShortcutRow: View {
     let keys: String
+    var ctrl: Bool = false
     var shift: Bool = false
+    var cmd: Bool = true
     let description: String
 
     var body: some View {
         LabeledContent(description) {
             HStack(spacing: 2) {
-                Image(systemName: "command")
-                if shift {
-                    Image(systemName: "shift")
-                }
+                if ctrl { Image(systemName: "control") }
+                if cmd { Image(systemName: "command") }
+                if shift { Image(systemName: "shift") }
                 Text(keys)
             }
             .font(.system(size: 12, design: .monospaced))
