@@ -30,7 +30,7 @@
       {{ T "hero_desc" | safeHTML }}
     </p>
 
-    <div class="flex gap-4 flex-wrap animate-fade-up-3">
+    <div class="flex gap-4 flex-wrap items-center animate-fade-up-3">
       <a href="{{ .Site.Params.githubURL }}/releases" class="inline-flex items-center gap-2 bg-wine text-[#F7F4F3] px-6 py-3 rounded-lg font-mono text-sm font-medium border border-wine-light no-underline transition-all hover:bg-wine-light hover:-translate-y-0.5 hover:shadow-[0_8px_30px_var(--color-wine-glow)]">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         {{ T "hero_download" }}
@@ -39,9 +39,20 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
         {{ T "hero_source" }}
       </a>
+      <span class="text-fg-faint hidden md:inline">or</span>
+      <div class="hidden md:flex items-center rounded-lg border border-fg-faint bg-bg-surface overflow-hidden">
+        <code class="px-4 py-2.5 font-mono text-sm text-fg-dim select-all">brew install alltuner/tap/factory-floor</code>
+        <button onclick="navigator.clipboard.writeText('brew install alltuner/tap/factory-floor');this.querySelector('.icon-copy').classList.add('hidden');this.querySelector('.icon-check').classList.remove('hidden');setTimeout(()=>{this.querySelector('.icon-copy').classList.remove('hidden');this.querySelector('.icon-check').classList.add('hidden')},2000)" class="px-3 py-2.5 text-fg-muted hover:text-fg transition-colors border-l border-fg-faint hover:bg-fg-faint cursor-pointer bg-transparent" aria-label="Copy">
+          <svg class="icon-copy w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <svg class="icon-check w-4 h-4 hidden text-code-str" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
     </div>
 
-    {{ partial "install-command.html" . }}
+    <!-- Mobile brew install -->
+    <div class="md:hidden mt-4 animate-fade-up-3">
+      {{ partial "install-command.html" . }}
+    </div>
 
     {{ partial "terminal-preview.html" . }}
   </div>
