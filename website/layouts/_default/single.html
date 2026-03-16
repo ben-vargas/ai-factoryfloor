@@ -1,0 +1,30 @@
+{{ define "content" }}
+{{ partial "nav.html" . }}
+
+<section class="min-h-screen flex flex-col justify-center pt-20">
+  <div class="max-w-[600px] mx-auto px-8 text-center">
+    <h1 class="font-mono text-3xl font-bold mb-6">{{ .Title }}</h1>
+
+    <p class="text-fg-muted leading-relaxed mb-8">
+      Factory Floor is free and open source. If it's useful to you,
+      consider supporting its development. Your support helps cover
+      infrastructure costs and funds new features.
+    </p>
+
+    <div class="flex flex-col gap-4 items-center mb-12">
+      <p class="text-fg-muted text-sm">Sponsorship options coming soon.</p>
+      <a href="https://github.com/alltuner/factoryfloor" class="inline-flex items-center gap-2 bg-wine text-[#F7F4F3] px-6 py-3 rounded-lg font-mono text-sm font-medium border border-wine-light no-underline transition-all hover:bg-wine-light hover:-translate-y-0.5">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Star the project on GitHub
+      </a>
+    </div>
+
+    <p class="text-fg-muted text-sm">
+      Built by <a href="https://davidpoblador.com" class="text-wine-light hover:underline">David Poblador i Garcia</a>
+      with the support of <a href="https://alltuner.com" class="text-wine-light hover:underline">All Tuner Labs</a>
+    </p>
+  </div>
+</section>
+
+{{ partial "footer.html" . }}
+{{ end }}

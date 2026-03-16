@@ -178,6 +178,17 @@ struct ProjectSidebar: View {
                     .buttonStyle(.plain)
                     .padding(8)
                 }
+
+                // Credit line
+                VStack(spacing: 2) {
+                    Text("by David Poblador")
+                        .font(.system(size: 9))
+                        .foregroundStyle(.quaternary)
+                    Link("Support the development", destination: URL(string: "https://factory-floor.com/fund")!)
+                        .font(.system(size: 9))
+                        .foregroundStyle(.tertiary)
+                }
+                .padding(.bottom, 4)
             }
             .frame(maxWidth: .infinity)
             .frame(height: max(80, geo.size.height * 0.2))

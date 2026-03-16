@@ -461,8 +461,11 @@ struct SingleTerminalView: NSViewRepresentable {
             ])
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            terminalView.setFocused(isFocused)
+        if isFocused {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                surfaceCache.focusExclusively(surfaceID)
+                terminalView.window?.makeFirstResponder(terminalView)
+            }
         }
     }
 }
@@ -506,6 +509,13 @@ final class TerminalSurfaceCache: ObservableObject {
     func removeSurface(for id: UUID) {
         surfaces.removeValue(forKey: id)
         surfaceParams.removeValue(forKey: id)
+    }
+
+    /// Unfocus all surfaces except the given one.
+    func focusExclusively(_ id: UUID) {
+        for (surfaceID, view) in surfaces {
+            view.setFocused(surfaceID == id)
+        }
     }
 
     func removeWorkstreamSurfaces(for workstreamID: UUID) {
