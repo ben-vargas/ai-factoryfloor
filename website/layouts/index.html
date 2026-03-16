@@ -1,7 +1,71 @@
 {{ define "content" }}
 {{ partial "nav.html" . }}
 
-{{ .Content }}
+<!-- Hero -->
+<section class="min-h-screen flex flex-col justify-center relative pt-20 overflow-hidden">
+  <div class="absolute -top-[30%] -right-[20%] w-[70%] h-[70%] rounded-full pointer-events-none animate-pulse-glow bg-[radial-gradient(ellipse,var(--color-wine-glow)_0%,transparent_70%)]"></div>
+
+  <div class="max-w-[1100px] mx-auto px-8 w-full">
+    <!-- Logo -->
+    <svg class="w-20 h-20 mb-8 animate-fade-up" viewBox="0 0 250 249" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(105,100.5)">
+        <g transform="matrix(1.6875,0,0,1.6877,-362.68,-21.43)">
+          <path fill="#5b2333" d="m226.61-28.52a47.99 47.99 0 00-47.99 47.99 47.99 47.99 0 0043.18 47.65v-21a20.16 20.16 0 01-15.99-19.67l.01-.2h-.01v-19.78h8.35v19.79h.06a11.77 12.5 0 00-.02.19 11.77 12.5 0 0011.77 12.5 11.77 12.5 0 0011.77-12.5 11.77 12.5 0 00-.02-.19h.06v-9.28h8.35v9.27h-.01l.01.2a20.16 20.16 0 01-15.99 19.67v21.09a47.99 47.99 0 0044.46-47.74 47.99 47.99 0 00-47.99-47.99zm-20.8 12.8h8.35v12.38h-8.35zm31.98 0h8.35v22.89h-8.35zm-11.81 43.24a3.74 3.74 0 013.74 3.74 3.74 3.74 0 01-3.74 3.74 3.74 3.74 0 01-3.74-3.74 3.74 3.74 0 013.74-3.74z"/>
+        </g>
+        <path d="m-105.04 147.67v-5h12v5h3v-7h8l4-3 4 3 4-3 4 3v7h3v-18h4v18h4v-6h14v6h3v-8h28v8h3v-5h10v5h2v-16h4v16h3v-7l5-3 5 3 5-3 5 3 5-3 5 3v7h4c0-32 8-44 11-44 3 0 11 12 11 44h3v-6h16v6h2v-8h26v8h3v-4h8v4h2v-14h4v14h3v-6h10v6z" fill="#5b2333" stroke="#5b2333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </svg>
+
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-mono text-xs text-fg-muted mb-8 border border-fg-faint bg-fg-faint animate-fade-up">
+      <span class="w-1.5 h-1.5 bg-wine-light rounded-full animate-blink"></span>
+      {{ T "hero_badge" }}
+    </div>
+
+    <h1 class="font-mono font-bold leading-[1.05] tracking-tighter mb-6 animate-fade-up-1 text-[clamp(3rem,7vw,5.5rem)]">
+      {{ T "hero_title_1" }} <span class="bg-gradient-to-br from-wine-light to-[#9e4a60] bg-clip-text text-transparent">{{ T "hero_title_accent" }}</span><br>
+      {{ T "hero_title_2" }}
+    </h1>
+
+    <p class="text-lg text-fg-muted max-w-[540px] leading-relaxed mb-10 animate-fade-up-2">
+      {{ T "hero_desc" | safeHTML }}
+    </p>
+
+    <div class="flex gap-4 flex-wrap animate-fade-up-3">
+      <a href="{{ .Site.Params.githubURL }}/releases" class="inline-flex items-center gap-2 bg-wine text-[#F7F4F3] px-6 py-3 rounded-lg font-mono text-sm font-medium border border-wine-light no-underline transition-all hover:bg-wine-light hover:-translate-y-0.5 hover:shadow-[0_8px_30px_var(--color-wine-glow)]">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        {{ T "hero_download" }}
+      </a>
+      <a href="{{ .Site.Params.githubURL }}" class="inline-flex items-center gap-2 bg-transparent text-fg-dim px-6 py-3 rounded-lg font-mono text-sm border border-fg-faint no-underline transition-all hover:-translate-y-0.5 hover:bg-fg-faint">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        {{ T "hero_source" }}
+      </a>
+    </div>
+
+    {{ partial "install-command.html" . }}
+
+    {{ partial "terminal-preview.html" . }}
+  </div>
+</section>
+
+<div class="divider"></div>
+
+{{ partial "features.html" . }}
+
+<div class="divider"></div>
+
+{{ partial "how-it-works.html" . }}
+
+<div class="divider"></div>
+
+{{ partial "config.html" . }}
+
+<div class="divider"></div>
+
+{{ partial "env-vars.html" . }}
+
+<div class="divider"></div>
+
+{{ partial "shortcuts.html" . }}
 
 {{ partial "footer.html" . }}
 {{ end }}

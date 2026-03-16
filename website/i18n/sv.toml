@@ -1,0 +1,143 @@
+[nav_features]
+other = "Funktioner"
+[nav_how]
+other = "Så fungerar det"
+[nav_config]
+other = "Konfiguration"
+
+[hero_badge]
+other = "macOS-nativt · Ghostty-terminal · Claude Code"
+[hero_title_1]
+other = "Din"
+[hero_title_accent]
+other = "AI-drivna"
+[hero_title_2]
+other = "utvecklarmiljö."
+[hero_desc]
+other = "En nativ macOS-app byggd på <a href=\"https://ghostty.org\" class=\"text-wine-light hover:underline\">Ghosttys</a> GPU-renderade terminal. Hanterar git-worktrees, Claude Code-sessioner och utvecklingsservrar från ett enda fönster. Varje arbetsflöde får sin egen gren, terminal och AI-agent — allt körs parallellt, allt i nativ hastighet."
+[hero_download]
+other = "Ladda ner"
+[hero_source]
+other = "Visa källkod"
+
+[features_label]
+other = "Funktioner"
+[features_title]
+other = "Allt i ett fönster."
+[features_desc]
+other = "Sluta jonglera mellan terminaler, webbläsare och git-klienter. Varje arbetsflöde är en fristående utvecklingsmiljö."
+[feat_worktrees_title]
+other = "Git-worktrees"
+[feat_worktrees_desc]
+other = "Varje arbetsflöde får sin egen gren och worktree. Växla mellan uppgifter utan att stasha, med .env-filer automatiskt symlänkade."
+[feat_claude_title]
+other = "Claude Code"
+[feat_claude_desc]
+other = "Integrerad AI-agent med sessionsbeständighet. Återuppta konversationer efter omstarter med automatiska sessions-ID:n."
+[feat_tmux_title]
+other = "Tmux-beständighet"
+[feat_tmux_desc]
+other = "Agentsessioner överlever omstarter via tmux på en dedikerad socket. Inget mer tappat sammanhang eller avbrutna arbetsflöden."
+[feat_scripts_title]
+other = "Setup- och körskript"
+[feat_scripts_desc]
+other = "Konfigurera setup-, kör- och nedrivningsskript per projekt. Kompatibelt med emdash-, conductor- och superset-konfigurationer."
+[feat_browser_title]
+other = "Inbäddad webbläsare"
+[feat_browser_desc]
+other = "WKWebView-webbläsarflik med deterministisk porttilldelning. Förhandsgranska din app utan att lämna arbetsytan."
+[feat_github_title]
+other = "GitHub-integration"
+[feat_github_desc]
+other = "Se repoinformation, öppna PR:er och grenstatus för PR:er direkt i projektvyn. Drivs av gh CLI."
+
+[how_label]
+other = "Så fungerar det"
+[how_title]
+other = "Tre steg till parallell utveckling."
+[how_desc]
+other = "Gå från repo till körande arbetsflöde på sekunder. Varje arbetsflöde är isolerat och fristående."
+[step1_title]
+other = "Lägg till ett projekt"
+[step1_desc]
+other = "Dra en katalog till sidofältet, eller skapa en ny. Factory Floor upptäcker git-repon, installerade verktyg och GitHub-anslutningar automatiskt."
+[step2_title]
+other = "Skapa ett arbetsflöde"
+[step2_desc]
+other = "En ny git-worktree med en färsk gren, en Claude Code-session, en terminal och en webbläsarflik. Allt kopplat och redo att köra."
+[step3_title]
+other = "Koda med AI"
+[step3_desc]
+other = "Kodningsagenten döper om din gren för att matcha uppgiften. Setup-skript installerar beroenden. Växla mellan arbetsflöden utan att tappa tillstånd."
+
+[config_label]
+other = "Konfiguration"
+[config_title]
+other = "Enkel skriptkonfiguration."
+[config_desc]
+other = "Automatisera ditt arbetsflödes livscykel med setup-, kör- och nedrivningsskript. Installera beroenden när en worktree skapas, starta utvecklingsservrar vid behov och rensa resurser vid arkivering."
+[config_add]
+other = "Lägg till en"
+[config_or_use]
+other = "i ditt repo, eller använd din befintliga konfiguration från"
+
+[env_label]
+other = "Miljö"
+[env_title]
+other = "Variabler tillgängliga i varje terminal."
+[env_desc]
+other = "Varje arbetsflödesterminal, setup-skript och körkommando har tillgång till dessa miljövariabler. Använd dem i dina skript och utvecklingsserverkonfigurationer."
+[env_variable]
+other = "Variabel"
+[env_description]
+other = "Beskrivning"
+[env_example]
+other = "Exempel"
+[env_project]
+other = "Projektnamn"
+[env_workstream]
+other = "Arbetsflödesnamn"
+[env_project_dir]
+other = "Huvudrepots sökväg"
+[env_worktree_dir]
+other = "Worktree-sökväg för detta arbetsflöde"
+[env_port]
+other = "Deterministisk port för detta arbetsflöde"
+
+[shortcuts_label]
+other = "Tangentbordsfokus"
+[shortcuts_title]
+other = "Navigera utan musen."
+[shortcuts_desc]
+other = "Kontextkänsliga genvägar som anpassar sig efter om du är i en projektvy eller ett arbetsflöde."
+[shortcuts_global]
+other = "Globalt"
+[shortcuts_project]
+other = "Projektvy"
+[shortcuts_workstream]
+other = "Arbetsflödesvy"
+[sc_new]
+other = "Nytt arbetsflöde eller projekt"
+[sc_settings]
+other = "Inställningar"
+[sc_open_ws]
+other = "Öppna arbetsflöde efter position"
+[sc_back]
+other = "Tillbaka till projektet"
+[sc_tabs]
+other = "Info / Agent / Terminal / Webbläsare"
+[sc_script_tabs]
+other = "Setup / Kör"
+[sc_cycle]
+other = "Växla flikar"
+[sc_ext_browser]
+other = "Extern webbläsare"
+[sc_ext_terminal]
+other = "Extern terminal"
+
+[footer_built_by]
+other = "Byggd av"
+[footer_support]
+other = "med stöd av"
+[footer_contact]
+other = "Kontakt"

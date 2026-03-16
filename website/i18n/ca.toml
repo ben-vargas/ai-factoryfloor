@@ -1,0 +1,151 @@
+# Navigation
+[nav_features]
+other = "Funcionalitats"
+[nav_how]
+other = "Com funciona"
+[nav_config]
+other = "Configuració"
+
+# Hero
+[hero_badge]
+other = "macOS natiu · Terminal Ghostty · Claude Code"
+[hero_title_1]
+other = "El teu"
+[hero_title_accent]
+other = "espai de treball"
+[hero_title_2]
+other = "amb IA."
+[hero_desc]
+other = "Una app nativa de macOS construïda sobre el terminal renderitzat per GPU de <a href=\"https://ghostty.org\" class=\"text-wine-light hover:underline\">Ghostty</a>. Gestiona git worktrees, sessions de Claude Code i servidors de desenvolupament des d'una sola finestra. Cada workstream té la seva pròpia branca, terminal i agent d'IA — tot en paral·lel, tot a velocitat nativa."
+[hero_download]
+other = "Descarrega"
+[hero_source]
+other = "Veure el codi font"
+
+# Features
+[features_label]
+other = "Funcionalitats"
+[features_title]
+other = "Tot en una sola finestra."
+[features_desc]
+other = "Prou de fer malabars amb terminals, navegadors i clients git. Cada workstream és un entorn de desenvolupament autònom."
+[feat_worktrees_title]
+other = "Git Worktrees"
+[feat_worktrees_desc]
+other = "Cada workstream té la seva pròpia branca i worktree. Canvia de tasca sense fer stash, amb els fitxers .env enllaçats automàticament."
+[feat_claude_title]
+other = "Claude Code"
+[feat_claude_desc]
+other = "Agent d'IA integrat amb persistència de sessions. Reprèn converses entre reinicis de l'app amb identificadors de sessió automàtics."
+[feat_tmux_title]
+other = "Persistència amb Tmux"
+[feat_tmux_desc]
+other = "Les sessions de l'agent sobreviuen als reinicis de l'app via tmux en un socket dedicat. Mai més context perdut ni fluxos de treball interromputs."
+[feat_scripts_title]
+other = "Scripts de configuració i execució"
+[feat_scripts_desc]
+other = "Configura scripts de preparació, execució i desmuntatge per projecte. Compatible amb configuracions d'emdash, conductor i superset."
+[feat_browser_title]
+other = "Navegador integrat"
+[feat_browser_desc]
+other = "Pestanya de navegador WKWebView amb assignació de ports determinista. Previsualitza la teva app sense sortir de l'espai de treball."
+[feat_github_title]
+other = "Integració amb GitHub"
+[feat_github_desc]
+other = "Consulta informació del repositori, PRs obertes i l'estat de PRs per branca directament a la vista del projecte. Funciona amb el CLI de gh."
+
+# How it works
+[how_label]
+other = "Com funciona"
+[how_title]
+other = "Tres passos per al desenvolupament en paral·lel."
+[how_desc]
+other = "Del repositori a un workstream en funcionament en segons. Cada workstream és aïllat i autònom."
+[step1_title]
+other = "Afegeix un projecte"
+[step1_desc]
+other = "Arrossega un directori a la barra lateral, o crea'n un de nou. Factory Floor detecta automàticament repositoris git, eines instal·lades i connexions amb GitHub."
+[step2_title]
+other = "Crea un workstream"
+[step2_desc]
+other = "Un nou git worktree amb una branca nova, una sessió de Claude Code, un terminal i una pestanya de navegador. Tot connectat i llest per començar."
+[step3_title]
+other = "Programa amb IA"
+[step3_desc]
+other = "L'agent de programació renombra la branca per adaptar-la a la tasca. Els scripts de preparació instal·len les dependències. Canvia entre workstreams sense perdre l'estat."
+
+# Config
+[config_label]
+other = "Configuració"
+[config_title]
+other = "Configuració amb scripts directes."
+[config_desc]
+other = "Automatitza el cicle de vida dels teus workstreams amb scripts de preparació, execució i desmuntatge. Instal·la dependències quan es crea un worktree, inicia servidors de desenvolupament sota demanda i allibera recursos en arxivar."
+[config_add]
+other = "Afegeix un"
+[config_or_use]
+other = "al teu repositori, o utilitza la teva configuració existent de"
+
+# Env vars
+[env_label]
+other = "Entorn"
+[env_title]
+other = "Variables disponibles a cada terminal."
+[env_desc]
+other = "Cada terminal de workstream, script de preparació i comanda d'execució té accés a aquestes variables d'entorn. Utilitza-les als teus scripts i configuracions de servidors de desenvolupament."
+[env_variable]
+other = "Variable"
+[env_description]
+other = "Descripció"
+[env_example]
+other = "Exemple"
+[env_project]
+other = "Nom del projecte"
+[env_workstream]
+other = "Nom del workstream"
+[env_project_dir]
+other = "Ruta del repositori principal"
+[env_worktree_dir]
+other = "Ruta del worktree d'aquest workstream"
+[env_port]
+other = "Port determinista per a aquest workstream"
+
+# Shortcuts
+[shortcuts_label]
+other = "Teclat primer"
+[shortcuts_title]
+other = "Navega sense el ratolí."
+[shortcuts_desc]
+other = "Dreceres sensibles al context que s'adapten segons si ets a la vista del projecte o d'un workstream."
+[shortcuts_global]
+other = "Global"
+[shortcuts_project]
+other = "Vista del projecte"
+[shortcuts_workstream]
+other = "Vista del workstream"
+[sc_new]
+other = "Nou workstream o projecte"
+[sc_settings]
+other = "Configuració"
+[sc_open_ws]
+other = "Obre workstream per posició"
+[sc_back]
+other = "Torna al projecte"
+[sc_tabs]
+other = "Info / Agent / Terminal / Navegador"
+[sc_script_tabs]
+other = "Preparació / Execució"
+[sc_cycle]
+other = "Cicla pestanyes"
+[sc_ext_browser]
+other = "Navegador extern"
+[sc_ext_terminal]
+other = "Terminal extern"
+
+# Footer
+[footer_built_by]
+other = "Fet per"
+[footer_support]
+other = "amb el suport de"
+[footer_contact]
+other = "Contacte"

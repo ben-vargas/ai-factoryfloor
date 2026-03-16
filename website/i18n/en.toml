@@ -1,0 +1,151 @@
+# Navigation
+[nav_features]
+other = "Features"
+[nav_how]
+other = "How it works"
+[nav_config]
+other = "Config"
+
+# Hero
+[hero_badge]
+other = "macOS native · Ghostty terminal · Claude Code"
+[hero_title_1]
+other = "Your"
+[hero_title_accent]
+other = "AI‑powered"
+[hero_title_2]
+other = "dev workspace."
+[hero_desc]
+other = "A native macOS app built on <a href=\"https://ghostty.org\" class=\"text-wine-light hover:underline\">Ghostty</a>'s GPU-rendered terminal. Manages git worktrees, Claude Code sessions, and dev servers from a single window. Each workstream gets its own branch, terminal, and AI agent — all running in parallel, all at native speed."
+[hero_download]
+other = "Download"
+[hero_source]
+other = "View source"
+
+# Features
+[features_label]
+other = "Features"
+[features_title]
+other = "Everything in one window."
+[features_desc]
+other = "No more juggling terminals, browsers, and git clients. Each workstream is a self-contained development environment."
+[feat_worktrees_title]
+other = "Git Worktrees"
+[feat_worktrees_desc]
+other = "Each workstream gets its own branch and worktree. Switch between tasks without stashing, with .env files automatically symlinked."
+[feat_claude_title]
+other = "Claude Code"
+[feat_claude_desc]
+other = "Integrated AI agent with session persistence. Resume conversations across app restarts with automatic session IDs."
+[feat_tmux_title]
+other = "Tmux Persistence"
+[feat_tmux_desc]
+other = "Agent sessions survive app restarts via tmux on a dedicated socket. No more lost context or interrupted workflows."
+[feat_scripts_title]
+other = "Setup & Run Scripts"
+[feat_scripts_desc]
+other = "Configure setup, run, and teardown scripts per project. Compatible with emdash, conductor, and superset configs."
+[feat_browser_title]
+other = "Embedded Browser"
+[feat_browser_desc]
+other = "WKWebView browser tab with deterministic port allocation. Preview your app without leaving the workspace."
+[feat_github_title]
+other = "GitHub Integration"
+[feat_github_desc]
+other = "See repo info, open PRs, and branch PR status directly in the project view. Powered by the gh CLI."
+
+# How it works
+[how_label]
+other = "How it works"
+[how_title]
+other = "Three steps to parallel development."
+[how_desc]
+other = "Go from repo to running workstream in seconds. Each workstream is isolated and self-contained."
+[step1_title]
+other = "Add a project"
+[step1_desc]
+other = "Drop a directory on the sidebar, or create a new one. Factory Floor detects git repos, installed tools, and GitHub connections automatically."
+[step2_title]
+other = "Create a workstream"
+[step2_desc]
+other = "A new git worktree with a fresh branch, a Claude Code session, a terminal, and a browser tab. All wired up and ready to go."
+[step3_title]
+other = "Code with AI"
+[step3_desc]
+other = "The coding agent renames your branch to match the task. Setup scripts install dependencies. Switch between workstreams without losing state."
+
+# Config
+[config_label]
+other = "Configuration"
+[config_title]
+other = "Drop-in script config."
+[config_desc]
+other = "Automate your workstream lifecycle with setup, run, and teardown scripts. Install dependencies when a worktree is created, start dev servers on demand, and clean up resources when archiving."
+[config_add]
+other = "Add a"
+[config_or_use]
+other = "to your repo, or use your existing config from"
+
+# Env vars
+[env_label]
+other = "Environment"
+[env_title]
+other = "Variables available in every terminal."
+[env_desc]
+other = "Every workstream terminal, setup script, and run command has access to these environment variables. Use them in your scripts and dev server configs."
+[env_variable]
+other = "Variable"
+[env_description]
+other = "Description"
+[env_example]
+other = "Example"
+[env_project]
+other = "Project name"
+[env_workstream]
+other = "Workstream name"
+[env_project_dir]
+other = "Main repository path"
+[env_worktree_dir]
+other = "Worktree path for this workstream"
+[env_port]
+other = "Deterministic port for this workstream"
+
+# Shortcuts
+[shortcuts_label]
+other = "Keyboard-first"
+[shortcuts_title]
+other = "Navigate without the mouse."
+[shortcuts_desc]
+other = "Context-sensitive shortcuts that adapt to whether you're in a project view or a workstream."
+[shortcuts_global]
+other = "Global"
+[shortcuts_project]
+other = "Project view"
+[shortcuts_workstream]
+other = "Workstream view"
+[sc_new]
+other = "New workstream or project"
+[sc_settings]
+other = "Settings"
+[sc_open_ws]
+other = "Open workstream by position"
+[sc_back]
+other = "Back to project"
+[sc_tabs]
+other = "Info / Agent / Terminal / Browser"
+[sc_script_tabs]
+other = "Setup / Run"
+[sc_cycle]
+other = "Cycle tabs"
+[sc_ext_browser]
+other = "External browser"
+[sc_ext_terminal]
+other = "External terminal"
+
+# Footer
+[footer_built_by]
+other = "Built by"
+[footer_support]
+other = "with the support of"
+[footer_contact]
+other = "Contact"
