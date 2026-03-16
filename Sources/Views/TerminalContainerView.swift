@@ -74,6 +74,9 @@ struct TerminalContainerView: View {
         resume.option("--name", workstreamName)
         if useTmux { resume.flag("--teammate-mode"); resume.arg("tmux") }
         if bypassPermissions { resume.flag("--dangerously-skip-permissions") }
+        if autoRenameBranch {
+            resume.option("--append-system-prompt", SystemPrompts.autoRenameBranchPrompt)
+        }
 
         // New session gets extra flags
         var fresh = CommandBuilder(basePath)
