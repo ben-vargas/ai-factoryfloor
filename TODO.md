@@ -8,7 +8,7 @@
 - [ ] Build and ship a standalone CLI binary (like `code` for VS Code)
 - [ ] Code signing and notarization for distribution
 - [ ] App icon
-- [ ] Credits: Poblenou skyline from alltuner.com, All Tuner Labs logo in help view
+- [ ] All Tuner Labs logo image in help view (needs asset)
 
 ## Features
 - [ ] Sidebar visual polish (custom styling beyond default SwiftUI)
@@ -27,7 +27,6 @@
 
 ## Localization
 - [ ] Add more translations (copy en.lproj to xx.lproj, translate strings)
-- [ ] New strings from recent features need translation in ca, es, sv
 
 ## Done
 - [x] Embedded Ghostty terminals (Metal GPU-rendered via libghostty)
