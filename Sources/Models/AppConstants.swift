@@ -7,9 +7,11 @@ enum AppConstants {
     #if DEBUG
     static let appID = "factoryfloor-debug"
     static let appName = "Factory Floor Debug"
+    static let urlScheme = "factoryfloor-debug"
     #else
     static let appID = "factoryfloor"
     static let appName = "Factory Floor"
+    static let urlScheme = "factoryfloor"
     #endif
 
     /// Config directory: ~/.config/factoryfloor[-debug]/ (respects XDG_CONFIG_HOME).

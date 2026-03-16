@@ -31,7 +31,7 @@
             <string>com.alltuner.factoryfloor.open</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>factoryfloor</string>
+                <string>${FF_URL_SCHEME}</string>
             </array>
         </dict>
     </array>

@@ -19,7 +19,12 @@ struct SettingsView: View {
 
     @EnvironmentObject private var appEnv: AppEnvironment
     @State private var showingClearConfirm = false
-    @State private var cliInstalled = FileManager.default.fileExists(atPath: "/usr/local/bin/ff")
+    #if DEBUG
+    private static let cliName = "ff-debug"
+    #else
+    private static let cliName = "ff"
+    #endif
+    @State private var cliInstalled = FileManager.default.fileExists(atPath: "/usr/local/bin/\(cliName)")
 
     var body: some View {
         Form {
@@ -60,13 +65,13 @@ struct SettingsView: View {
                     .disabled(appEnv.isDetecting)
                 }
 
-                LabeledContent("Install 'ff' command") {
+                LabeledContent("Install '\(Self.cliName)' command") {
                     Button(cliInstalled ? "Installed" : "Install...", action: installCLI)
                         .disabled(cliInstalled)
                 }
                 Text(cliInstalled
-                    ? "The 'ff' command is installed and ready to use."
-                    : "Install the 'ff' command to open directories in Factory Floor from any terminal. Usage: ff [directory]")
+                    ? "The '\(Self.cliName)' command is installed and ready to use."
+                    : "Install the '\(Self.cliName)' command to open directories in \(AppConstants.appName) from any terminal.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -246,27 +251,21 @@ struct SettingsView: View {
     }
 
     private func installCLI() {
-        // Path to the ff script bundled in the app
-        guard let scriptPath = Bundle.main.path(forResource: "ff", ofType: nil, inDirectory: "Scripts") else {
-            // Fallback: create the script inline
-            let script = """
-            #!/bin/bash
-            DIR="${1:-.}"
-            RESOLVED=$(cd "$DIR" 2>/dev/null && pwd)
-            [ -z "$RESOLVED" ] && echo "Error: directory '$DIR' not found" >&2 && exit 1
-            open "factoryfloor://$RESOLVED"
-            """
-            let tempPath = NSTemporaryDirectory() + "ff"
-            try? script.write(toFile: tempPath, atomically: true, encoding: .utf8)
-            chmod(tempPath, 0o755)
-            installWithPrivileges(source: tempPath)
-            return
-        }
-        installWithPrivileges(source: scriptPath)
+        let script = """
+        #!/bin/bash
+        DIR="${1:-.}"
+        RESOLVED=$(cd "$DIR" 2>/dev/null && pwd)
+        [ -z "$RESOLVED" ] && echo "Error: directory '$DIR' not found" >&2 && exit 1
+        open "\(AppConstants.urlScheme)://$RESOLVED"
+        """
+        let tempPath = NSTemporaryDirectory() + Self.cliName
+        try? script.write(toFile: tempPath, atomically: true, encoding: .utf8)
+        chmod(tempPath, 0o755)
+        installWithPrivileges(source: tempPath)
     }
 
     private func installWithPrivileges(source: String) {
-        let destination = "/usr/local/bin/ff"
+        let destination = "/usr/local/bin/\(Self.cliName)"
         let script = "do shell script \"install -m 755 \(source.replacingOccurrences(of: "\"", with: "\\\"")) \(destination)\" with administrator privileges"
         if let appleScript = NSAppleScript(source: script) {
             var error: NSDictionary?

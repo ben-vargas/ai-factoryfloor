@@ -53,7 +53,7 @@ struct FF2App: App {
                     }
                 }
                 .onOpenURL { url in
-                    guard url.scheme == AppConstants.appID else { return }
+                    guard url.scheme == AppConstants.urlScheme else { return }
                     let path = url.path
                     guard !path.isEmpty else { return }
                     var isDir: ObjCBool = false
