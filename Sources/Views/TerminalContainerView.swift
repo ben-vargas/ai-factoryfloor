@@ -77,7 +77,7 @@ struct TerminalContainerView: View {
         if useTmux { fresh.flag("--teammate-mode"); fresh.arg("tmux") }
         if bypassPermissions { fresh.flag("--dangerously-skip-permissions") }
         if autoRenameBranch {
-            fresh.option("--system-prompt-file", SystemPrompts.autoRenameBranchPromptPath())
+            fresh.option("--append-system-prompt", SystemPrompts.autoRenameBranchPrompt)
         }
 
         let cmd = CommandBuilder.withFallback(
