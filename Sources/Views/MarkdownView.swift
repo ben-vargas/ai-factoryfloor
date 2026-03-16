@@ -10,7 +10,8 @@ struct MarkdownContentView: View {
     var body: some View {
         ScrollView {
             MarkdownView(text: markdown)
-                .padding(16)
+                .padding(.horizontal, 32)
+                .padding(.vertical, 16)
         }
     }
 }

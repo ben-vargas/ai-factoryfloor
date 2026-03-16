@@ -1,5 +1,5 @@
-// ABOUTME: Info tab for a workstream showing metadata and documentation files.
-// ABOUTME: Default tab when opening a workstream, with sub-tabs for markdown files.
+// ABOUTME: Info panel for a workstream showing app branding, metadata, shortcuts, and docs.
+// ABOUTME: Default view when opening a workstream, dismissible with Cmd+Return.
 
 import SwiftUI
 
@@ -21,105 +21,140 @@ struct WorkstreamInfoView: View {
         var id: String { name }
     }
 
-    // Files to look for, in order
     private static let docFileNames = ["README.md", "CLAUDE.md"]
 
     var body: some View {
         VStack(spacing: 0) {
-            // Workstream metadata
-            Form {
-                Section("Workstream") {
-                    LabeledContent("Name") {
-                        Text(workstreamName)
-                            .font(.system(.body, design: .monospaced))
-                    }
-
-                    if let branch = branchName {
-                        LabeledContent("Branch") {
-                            HStack(spacing: 4) {
-                                Image(systemName: "arrow.triangle.branch")
-                                    .font(.caption)
-                                Text(branch)
-                            }
-                            .foregroundStyle(.secondary)
-                        }
-                    }
-
-                    LabeledContent("Directory") {
-                        Text(abbreviatePath(workingDirectory))
-                            .font(.system(.body, design: .monospaced))
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-                    }
-
-                    LabeledContent("Project") {
-                        Text(projectName)
+            ScrollView {
+                VStack(spacing: 0) {
+                    // App header
+                    VStack(spacing: 8) {
+                        Image(nsImage: NSApp.applicationIconImage)
+                            .resizable()
+                            .frame(width: 64, height: 64)
+                        Text(AppConstants.appName)
+                            .font(.system(size: 20, weight: .bold))
+                        Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.1.0")")
+                            .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-                }
+                    .padding(.top, 24)
+                    .padding(.bottom, 8)
 
-                // GitHub PR for this branch
-                if appEnv.ghAvailable, let branch = branchName,
-                   let pr = appEnv.githubPR(for: projectDirectory, branch: branch) {
-                    Section("Pull Request") {
-                        LabeledContent("#\(pr.number)") {
-                            Text(pr.title)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(2)
+                    // Skyline
+                    PoblenouSkylineView()
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 16)
+
+                    // Workstream metadata
+                    Form {
+                        Section("Workstream") {
+                            LabeledContent("Name") {
+                                Text(workstreamName)
+                                    .font(.system(.body, design: .monospaced))
+                            }
+
+                            if let branch = branchName {
+                                LabeledContent("Branch") {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "arrow.triangle.branch")
+                                            .font(.caption)
+                                        Text(branch)
+                                    }
+                                    .foregroundStyle(.secondary)
+                                }
+                            }
+
+                            LabeledContent("Directory") {
+                                Text(abbreviatePath(workingDirectory))
+                                    .font(.system(.body, design: .monospaced))
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                                    .truncationMode(.middle)
+                            }
+
+                            LabeledContent("Project") {
+                                Text(projectName)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
-                        LabeledContent("Status") {
-                            Text(pr.state)
-                                .foregroundStyle(pr.state == "OPEN" ? .green : .secondary)
+
+                        // GitHub PR
+                        if appEnv.ghAvailable, let branch = branchName,
+                           let pr = appEnv.githubPR(for: projectDirectory, branch: branch) {
+                            Section("Pull Request") {
+                                LabeledContent("#\(pr.number)") {
+                                    Text(pr.title)
+                                        .foregroundStyle(.secondary)
+                                        .lineLimit(2)
+                                }
+                                LabeledContent("Status") {
+                                    Text(pr.state)
+                                        .foregroundStyle(pr.state == "OPEN" ? .green : .secondary)
+                                }
+                            }
+                        }
+
+                        // Scripts
+                        if scriptConfig.hasAnyScript {
+                            Section {
+                                if let setup = scriptConfig.setup {
+                                    LabeledContent("Setup") {
+                                        Text(setup)
+                                            .font(.system(.caption, design: .monospaced))
+                                            .foregroundStyle(.secondary)
+                                            .lineLimit(2)
+                                    }
+                                }
+                                if let run = scriptConfig.run {
+                                    LabeledContent("Run") {
+                                        Text(run)
+                                            .font(.system(.caption, design: .monospaced))
+                                            .foregroundStyle(.secondary)
+                                            .lineLimit(2)
+                                    }
+                                }
+                                if let teardown = scriptConfig.teardown {
+                                    LabeledContent("Teardown") {
+                                        Text(teardown)
+                                            .font(.system(.caption, design: .monospaced))
+                                            .foregroundStyle(.secondary)
+                                            .lineLimit(2)
+                                    }
+                                }
+                            } header: {
+                                HStack {
+                                    Text("Scripts")
+                                    Spacer()
+                                    if let source = scriptConfig.source {
+                                        Text(source)
+                                            .font(.caption)
+                                            .foregroundStyle(.tertiary)
+                                    }
+                                }
+                            }
+                        }
+
+                        // Shortcuts
+                        Section("Shortcuts") {
+                            ShortcutInfoRow(keys: "\u{2318}\u{21A9}", description: "Coding Agent")
+                            ShortcutInfoRow(keys: "\u{2318}I", description: "Toggle Info")
+                            ShortcutInfoRow(keys: "\u{2318}T", description: "New Terminal")
+                            ShortcutInfoRow(keys: "\u{2318}W", description: "Close Terminal")
+                            ShortcutInfoRow(keys: "\u{2318}B", description: "Toggle Browser")
+                            ShortcutInfoRow(keys: "\u{2318}0", description: "Back to Project")
+                            ShortcutInfoRow(keys: "\u{2318}\u{21E7}O", description: "External Browser")
+                            ShortcutInfoRow(keys: "\u{2318}\u{21E7}E", description: "External Terminal")
                         }
                     }
-                }
-                // Scripts
-                if scriptConfig.hasAnyScript {
-                    Section {
-                        if let setup = scriptConfig.setup {
-                            LabeledContent("Setup") {
-                                Text(setup)
-                                    .font(.system(.caption, design: .monospaced))
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(2)
-                            }
-                        }
-                        if let run = scriptConfig.run {
-                            LabeledContent("Run") {
-                                Text(run)
-                                    .font(.system(.caption, design: .monospaced))
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(2)
-                            }
-                        }
-                        if let teardown = scriptConfig.teardown {
-                            LabeledContent("Teardown") {
-                                Text(teardown)
-                                    .font(.system(.caption, design: .monospaced))
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(2)
-                            }
-                        }
-                    } header: {
-                        HStack {
-                            Text("Scripts")
-                            Spacer()
-                            if let source = scriptConfig.source {
-                                Text(source)
-                                    .font(.caption)
-                                    .foregroundStyle(.tertiary)
-                            }
-                        }
-                    }
+                    .formStyle(.grouped)
+                    .scrollDisabled(true)
                 }
             }
-            .formStyle(.grouped)
-            .scrollDisabled(true)
-            .frame(maxHeight: scriptConfig.hasAnyScript ? 420 : (branchName.flatMap({ appEnv.githubPR(for: projectDirectory, branch: $0) }) != nil ? 320 : 200))
 
             // Document tabs
             if !docFiles.isEmpty {
+                Divider()
                 HStack(spacing: 0) {
                     ForEach(docFiles) { doc in
                         DocTabButton(
@@ -131,12 +166,10 @@ struct WorkstreamInfoView: View {
                     Spacer()
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 8)
+                .padding(.vertical, 6)
 
                 Divider()
-                    .padding(.horizontal, 16)
 
-                // Rendered document
                 if let selected = selectedDoc,
                    let doc = docFiles.first(where: { $0.name == selected }) {
                     MarkdownContentView(markdown: doc.content)
@@ -144,15 +177,6 @@ struct WorkstreamInfoView: View {
                 } else {
                     Spacer()
                 }
-            } else {
-                VStack(spacing: 8) {
-                    Image(systemName: "doc.text")
-                        .font(.system(size: 28))
-                        .foregroundStyle(.tertiary)
-                    Text("No documentation files found")
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -190,6 +214,19 @@ struct WorkstreamInfoView: View {
             return "~" + path.dropFirst(home.count)
         }
         return path
+    }
+}
+
+private struct ShortcutInfoRow: View {
+    let keys: String
+    let description: String
+
+    var body: some View {
+        LabeledContent(description) {
+            Text(keys)
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundStyle(.secondary)
+        }
     }
 }
 

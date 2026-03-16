@@ -72,9 +72,6 @@ struct HelpView: View {
                     }
                     Link("davidpoblador.com", destination: URL(string: "https://davidpoblador.com")!)
                         .font(.caption)
-                    Text("Poblenou skyline inspired by alltuner.com")
-                        .font(.system(size: 9))
-                        .foregroundStyle(.quaternary)
                 }
                 .padding(.bottom, 32)
             }
