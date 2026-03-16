@@ -16,7 +16,6 @@ final class TerminalView: NSView, NSTextInputClient {
     private var trackingArea: NSTrackingArea?
     private var markedText = NSMutableAttributedString()
     private var keyTextAccumulator: [String]?
-    private var resizeDebounceWork: DispatchWorkItem?
     private var activityDebounceWork: DispatchWorkItem?
 
     init(app: ghostty_app_t, workingDirectory: String? = nil, command: String? = nil, initialInput: String? = nil, environmentVars: [String: String] = [:]) {
@@ -176,37 +175,7 @@ final class TerminalView: NSView, NSTextInputClient {
         let w = UInt32(newSize.width * scale)
         let h = UInt32(newSize.height * scale)
         guard w > 0 && h > 0 else { return }
-
-        // During long animations (sidebar toggle), hide the surface to avoid mid-animation
-        // rendering at intermediate sizes. Short animations (layout adjustments from adding
-        // views) should not trigger occlusion, as that can freeze the surface.
-        resizeDebounceWork?.cancel()
-        if NSAnimationContext.current.duration > 0.1 {
-            // Mark occluded so ghostty stops rendering during animation
-            ghostty_surface_set_occlusion(surface, true)
-
-            let work = DispatchWorkItem { [weak self] in
-                guard let self, let surface = self.surface else { return }
-                let currentScale = self.window?.backingScaleFactor ?? 2.0
-                let cw = UInt32(self.bounds.width * currentScale)
-                let ch = UInt32(self.bounds.height * currentScale)
-                if cw > 0 && ch > 0 {
-                    ghostty_surface_set_size(surface, cw, ch)
-                }
-                // Give ghostty one frame to render at the correct size before showing
-                ghostty_surface_refresh(surface)
-                DispatchQueue.main.async {
-                    ghostty_surface_set_occlusion(surface, false)
-                }
-            }
-            resizeDebounceWork = work
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + NSAnimationContext.current.duration,
-                execute: work
-            )
-        } else {
-            ghostty_surface_set_size(surface, w, h)
-        }
+        ghostty_surface_set_size(surface, w, h)
     }
 
 
