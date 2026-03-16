@@ -205,35 +205,35 @@ struct TerminalContainerView: View {
 
     private var toolbar: some View {
         HStack(spacing: 8) {
-            // Workstream info
-            HStack(spacing: 6) {
-                Image(systemName: "sparkle")
+            // Branch name
+            HStack(spacing: 5) {
+                Image(systemName: "arrow.triangle.branch")
                     .font(.system(size: 10))
+                    .foregroundStyle(.tertiary)
+                Text(appEnv.branchName(for: workingDirectory) ?? workstreamName)
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
+                    .lineLimit(1)
                     .foregroundStyle(.secondary)
-                if let branch = appEnv.branchName(for: workingDirectory) ?? Optional(workstreamName) {
-                    Text(branch)
-                        .font(.system(size: 12, weight: .medium, design: .monospaced))
-                        .lineLimit(1)
-                }
             }
 
             Spacer()
 
-            // Panel toggles
-            ToolbarIconButton(icon: "info.circle", isActive: showingInfo, shortcut: "I") {
+            // View toggles
+            ToolbarButton(label: "Agent", icon: "sparkle", shortcut: "\u{2318}\u{21A9}", isActive: !showingInfo && !showingBrowser) {
+                NotificationCenter.default.post(name: .focusAgent, object: nil)
+            }
+
+            ToolbarButton(label: "Info", icon: "info.circle", shortcut: "\u{2318}I", isActive: showingInfo) {
                 NotificationCenter.default.post(name: .toggleInfo, object: nil)
             }
-            .help("Toggle Info (\u{2318}1)")
 
-            ToolbarIconButton(icon: "terminal", isActive: !terminalIDs.isEmpty, shortcut: "T", badge: terminalIDs.isEmpty ? nil : "\(terminalIDs.count)") {
+            ToolbarButton(label: "Terminal", icon: "terminal", shortcut: "\u{2318}T", isActive: !terminalIDs.isEmpty, badge: terminalIDs.isEmpty ? nil : "\(terminalIDs.count)") {
                 NotificationCenter.default.post(name: .toggleTerminal, object: nil)
             }
-            .help("New Terminal (\u{2318}T)")
 
-            ToolbarIconButton(icon: "globe", isActive: showingBrowser, shortcut: "B") {
+            ToolbarButton(label: "Browser", icon: "globe", shortcut: "\u{2318}B", isActive: showingBrowser) {
                 NotificationCenter.default.post(name: .toggleBrowser, object: nil)
             }
-            .help("Toggle Browser (\u{2318}4)")
 
             // PR badge
             if let pr = branchPR, let url = URL(string: pr.url) {
@@ -324,10 +324,11 @@ struct TerminalContainerView: View {
 
 // MARK: - Toolbar icon button
 
-private struct ToolbarIconButton: View {
+private struct ToolbarButton: View {
+    let label: String
     let icon: String
+    let shortcut: String
     var isActive: Bool = false
-    var shortcut: String? = nil
     var badge: String? = nil
     let action: () -> Void
 
@@ -335,24 +336,29 @@ private struct ToolbarIconButton: View {
 
     var body: some View {
         Button(action: action) {
-            ZStack(alignment: .topTrailing) {
+            HStack(spacing: 4) {
                 Image(systemName: icon)
-                    .font(.system(size: 12))
-                    .frame(width: 28, height: 24)
-                    .background(isActive ? Color.accentColor.opacity(0.15) : (isHovering ? Color.primary.opacity(0.05) : .clear))
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                    .foregroundStyle(isActive ? .primary : .secondary)
+                    .font(.system(size: 11))
+                Text(label)
+                    .font(.system(size: 11, weight: isActive ? .semibold : .regular))
                 if let badge {
                     Text(badge)
-                        .font(.system(size: 8, weight: .bold))
+                        .font(.system(size: 9, weight: .bold))
                         .foregroundStyle(.white)
-                        .padding(.horizontal, 3)
+                        .padding(.horizontal, 4)
                         .padding(.vertical, 1)
                         .background(Color.accentColor)
                         .clipShape(Capsule())
-                        .offset(x: 4, y: -4)
                 }
+                Text(shortcut)
+                    .font(.system(size: 9))
+                    .foregroundStyle(.tertiary)
             }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(isActive ? Color.accentColor.opacity(0.15) : (isHovering ? Color.primary.opacity(0.05) : .clear))
+            .clipShape(RoundedRectangle(cornerRadius: 5))
+            .foregroundStyle(isActive ? .primary : .secondary)
         }
         .buttonStyle(.plain)
         .onHover { isHovering = $0 }
