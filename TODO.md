@@ -21,6 +21,7 @@
 - [ ] Preload Coding Agent terminal in background so it's ready when the user switches from Info tab
 - [ ] Drag-and-drop to reorder tabs
 - [ ] Website: favicon, OG image, SEO meta tags
+- [ ] Show project icon in info pages if found in a well-known location (e.g., icon.png, .github/icon.png)
 - [ ] Pin ghostty submodule update to CI (auto-test against new Ghostty releases)
 - [ ] Occlude non-visible terminal surfaces to save GPU (needs careful timing)
 - [ ] Swift 6 migration (strict concurrency)

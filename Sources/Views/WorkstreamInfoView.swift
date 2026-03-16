@@ -120,7 +120,7 @@ struct WorkstreamInfoView: View {
             // Scrollable: only the markdown content
             if let selected = selectedDoc,
                let doc = docFiles.first(where: { $0.name == selected }) {
-                MarkdownContentView(markdown: doc.content)
+                MarkdownContentView(markdown: doc.content, baseDirectory: workingDirectory)
                     .id(selected)
             } else if docFiles.isEmpty {
                 Spacer()

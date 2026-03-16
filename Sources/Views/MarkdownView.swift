@@ -8,6 +8,7 @@ import cmark_gfm_extensions
 
 struct MarkdownContentView: NSViewRepresentable {
     let markdown: String
+    var baseDirectory: String?
 
     func makeNSView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
@@ -22,7 +23,8 @@ struct MarkdownContentView: NSViewRepresentable {
     func updateNSView(_ webView: WKWebView, context: Context) {
         let html = renderMarkdownToHTML(markdown)
         let page = wrapInHTMLPage(html)
-        webView.loadHTMLString(page, baseURL: nil)
+        let base = baseDirectory.map { URL(fileURLWithPath: $0, isDirectory: true) }
+        webView.loadHTMLString(page, baseURL: base)
     }
 
     func makeCoordinator() -> Coordinator {
