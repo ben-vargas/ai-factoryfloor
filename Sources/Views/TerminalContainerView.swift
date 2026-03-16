@@ -50,6 +50,7 @@ struct TerminalContainerView: View {
     @AppStorage("factoryfloor.autoRenameBranch") private var autoRenameBranch: Bool = false
     @State private var activeTab: WorkstreamTab = .info
     @State private var scriptConfig: ScriptConfig = .empty
+    @State private var branchPR: GitHubPR?
 
     private var claudeID: UUID { workstreamID }
     private var workspaceID: UUID { derivedUUID(from: workstreamID, salt: "workspace") }
@@ -157,6 +158,24 @@ struct TerminalContainerView: View {
                     }
                 }
                 Spacer()
+
+                if let pr = branchPR, let url = URL(string: pr.url) {
+                    Button(action: { NSWorkspace.shared.open(url) }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.triangle.pull")
+                                .font(.system(size: 11))
+                            Text("#\(pr.number)")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.accentColor.opacity(0.12))
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .foregroundStyle(.green)
+                    }
+                    .buttonStyle(.plain)
+                    .help(pr.title)
+                }
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
@@ -213,6 +232,10 @@ struct TerminalContainerView: View {
         .onAppear {
             scriptConfig = ScriptConfig.load(from: projectDirectory)
             prewarmSurfaces()
+            refreshBranchPR()
+        }
+        .onReceive(Timer.publish(every: 30, on: .main, in: .common).autoconnect()) { _ in
+            refreshBranchPR()
         }
         .onReceive(NotificationCenter.default.publisher(for: .switchByNumber)) { notification in
             guard let n = notification.object as? Int else { return }
@@ -265,6 +288,20 @@ struct TerminalContainerView: View {
                 for: setupID, app: app, workingDirectory: workingDirectory,
                 command: setupCommand, environmentVars: envVars
             )
+        }
+    }
+
+    private func refreshBranchPR() {
+        guard appEnv.ghAvailable, let ghPath = appEnv.toolStatus.gh.path else { return }
+        let dir = projectDirectory
+        let workDir = workingDirectory
+        Task.detached {
+            let branch = GitOperations.repoInfo(at: workDir).branch
+            guard let branch else { return }
+            let pr = GitHubOperations.prForBranch(ghPath: ghPath, at: dir, branch: branch)
+            await MainActor.run {
+                self.branchPR = pr
+            }
         }
     }
 
