@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../layouts";
 
 @theme {
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
@@ -83,7 +84,6 @@ body::before {
   transform: translateY(0);
 }
 
-/* Steps connector */
 .steps-container::before {
   content: '';
   position: absolute;
@@ -95,7 +95,6 @@ body::before {
   opacity: 0.3;
 }
 
-/* Divider */
 .divider {
   height: 1px;
   background: linear-gradient(90deg, transparent 0%, var(--color-fg-faint) 50%, transparent 100%);

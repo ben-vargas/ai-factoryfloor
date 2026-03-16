@@ -1,11 +1,12 @@
 {
-  "name": "ff2-website",
+  "name": "factory-floor-website",
   "private": true,
-  "type": "module",
   "scripts": {
-    "dev": "bunx @tailwindcss/cli -i src/styles.css -o dist/styles.css --watch & bun run serve",
-    "build": "bunx @tailwindcss/cli -i src/styles.css -o dist/styles.css --minify && cp src/index.html dist/index.html",
-    "serve": "bun --hot serve.ts"
+    "css:build": "bunx @tailwindcss/cli -i css/input.css -o assets/css/style.css --minify",
+    "css:watch": "bunx @tailwindcss/cli -i css/input.css -o assets/css/style.css --watch",
+    "assets": "bun run css:build",
+    "build": "bun run assets && hugo",
+    "dev": "bun run assets && hugo serve --disableFastRender --gc"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.1",

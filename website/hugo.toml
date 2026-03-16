@@ -1,0 +1,14 @@
+# ABOUTME: Hugo configuration for the Factory Floor website.
+# ABOUTME: Single-page site deployed to factory-floor.com via GitHub Pages.
+
+baseURL = "https://factory-floor.com"
+title = "Factory Floor"
+languageCode = "en"
+
+[params]
+  description = "A native macOS app that manages git worktrees, Claude Code sessions, and dev servers from a single window."
+  ogImage = "/img/og-image.png"
+  githubURL = "https://github.com/anthropics/ff2"
+
+[markup.goldmark.renderer]
+  unsafe = true
