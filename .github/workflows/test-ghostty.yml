@@ -1,0 +1,58 @@
+name: Test Ghostty Compatibility
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # Weekly on Monday at 8am UTC
+  workflow_dispatch:
+    inputs:
+      ghostty_tag:
+        description: 'Ghostty tag to test against (e.g., v1.3.1). Leave empty for latest.'
+        required: false
+        default: ''
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          brew install xcodegen zig
+
+      - name: Update Ghostty submodule
+        run: |
+          cd ghostty
+          git fetch --tags
+          if [ -n "${{ github.event.inputs.ghostty_tag }}" ]; then
+            TAG="${{ github.event.inputs.ghostty_tag }}"
+          else
+            TAG=$(git tag -l 'v*' --sort=-v:refname | head -1)
+          fi
+          echo "Testing against Ghostty $TAG"
+          git checkout "$TAG"
+          echo "GHOSTTY_TAG=$TAG" >> $GITHUB_ENV
+
+      - name: Build Ghostty xcframework
+        run: |
+          cd ghostty
+          zig build -Demit-xcframework=true -Dxcframework-target=universal -Doptimize=ReleaseFast
+
+      - name: Build Factory Floor
+        run: |
+          xcodegen generate
+          xcodebuild -project FactoryFloor.xcodeproj -scheme FactoryFloor -configuration Debug build
+
+      - name: Run tests
+        run: |
+          xcodebuild -project FactoryFloor.xcodeproj -scheme FactoryFloorTests -configuration Debug test
+
+      - name: Report
+        if: always()
+        run: |
+          echo "## Ghostty Compatibility Test" >> $GITHUB_STEP_SUMMARY
+          echo "- **Ghostty version**: ${{ env.GHOSTTY_TAG }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Current pinned**: $(cd ghostty && git describe --tags 2>/dev/null || echo 'unknown')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
