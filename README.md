@@ -1,92 +1,164 @@
-# ff2
+<p align="center">
+  <img src="Resources/Assets.xcassets/AppIcon.appiconset/icon_256x256.png" width="128" height="128" alt="Factory Floor">
+</p>
 
-A macOS terminal app for managing coding projects with embedded [Ghostty](https://ghostty.org) terminals.
+<h1 align="center">Factory Floor</h1>
 
-Each project maps to a directory on disk. Inside each project you create workstreams, each with its own set of tabs: a coding agent terminal, a workspace terminal, and an embedded browser for previewing local dev servers.
+<p align="center">
+  <strong>AI-powered development workspace for macOS</strong><br>
+  Git worktrees, Claude Code sessions, and dev servers in a single native app.
+</p>
 
-## Build
+<p align="center">
+  <a href="https://factory-floor.com">Website</a> &middot;
+  <a href="https://github.com/alltuner/factoryfloor/releases">Download</a> &middot;
+  <a href="https://factory-floor.com/sponsor">Sponsor</a>
+</p>
 
-Requires: Xcode, XcodeGen (`brew install xcodegen`), Zig (`brew install zig`).
+<p align="center">
+  <img src="https://img.shields.io/github/license/alltuner/factoryfloor?color=5B2333" alt="License">
+  <img src="https://img.shields.io/github/stars/alltuner/factoryfloor?color=5B2333" alt="Stars">
+</p>
+
+---
+
+## What is Factory Floor?
+
+Factory Floor is a native macOS app built on [Ghostty](https://ghostty.org)'s GPU-rendered terminal. It manages multiple parallel development tasks, each in its own git worktree with a dedicated Claude Code agent, terminal, and browser.
+
+**One project, many workstreams, all at native speed.**
+
+### Features
+
+- **Git Worktrees** &mdash; Each workstream gets its own branch and worktree. Switch between tasks without stashing.
+- **Claude Code** &mdash; Integrated AI agent with session persistence. Resume conversations across app restarts.
+- **Tmux Persistence** &mdash; Agent sessions survive app restarts via tmux on a dedicated socket.
+- **Setup & Run Scripts** &mdash; Configure setup, run, and teardown scripts per project. Compatible with [emdash](https://emdash.sh), [conductor](https://conductor.build), and [superset](https://superset.sh) configs.
+- **Embedded Browser** &mdash; WKWebView tab with deterministic port allocation per workstream.
+- **GitHub Integration** &mdash; Repo info, open PRs, and branch PR status via the `gh` CLI.
+- **Dynamic Tabs** &mdash; Open as many terminals and browsers as you need. Close with Cmd+W or Ctrl+D.
+- **Keyboard-first** &mdash; Every action has a shortcut. Cmd+Return for agent, Cmd+I for info, Cmd+T for terminal, Cmd+B for browser.
+
+### Script Configuration
+
+Add a `.factoryfloor.json` to your project root:
+
+```json
+{
+  "setup": "npm install",
+  "run": "PORT=$FF_PORT npm run dev",
+  "teardown": "docker-compose down"
+}
+```
+
+Or use your existing config from emdash (`.emdash.json`), conductor (`conductor.json`), or superset (`.superset/config.json`).
+
+### Environment Variables
+
+Every workstream terminal has access to:
+
+| Variable | Description |
+|---|---|
+| `FF_PROJECT` | Project name |
+| `FF_WORKSTREAM` | Workstream name |
+| `FF_PROJECT_DIR` | Main repository path |
+| `FF_WORKTREE_DIR` | Worktree path for this workstream |
+| `FF_PORT` | Deterministic port (40001-49999) |
+
+### Keyboard Shortcuts
+
+#### Global
+
+| Shortcut | Action |
+|---|---|
+| `Cmd+N` | New workstream or project |
+| `Cmd+Shift+N` | New project |
+| `Cmd+,` | Settings |
+| `Cmd+Shift+?` | Help |
+
+#### Workstream
+
+| Shortcut | Action |
+|---|---|
+| `Cmd+Return` | Focus Coding Agent |
+| `Cmd+I` | Info panel |
+| `Cmd+T` | New Terminal |
+| `Cmd+B` | New Browser |
+| `Cmd+W` | Close tab |
+| `Cmd+L` | Address bar (browser) |
+| `Cmd+0` | Back to project |
+| `Cmd+1-9` | Switch tab |
+| `Cmd+Shift+[` / `]` | Cycle tabs |
+| `Cmd+Shift+O` | External browser |
+| `Cmd+Shift+E` | External terminal |
+
+### Supported Languages
+
+English, Catalan, Spanish, Swedish.
+
+---
+
+## Install
+
+```bash
+brew install alltuner/tap/factoryfloor
+```
+
+Or download from [GitHub Releases](https://github.com/alltuner/factoryfloor/releases).
+
+### CLI
+
+Install the `ff` command from Settings > Environment, or manually:
+
+```bash
+ff                  # open current directory
+ff ~/repos/myapp    # open a specific directory
+```
+
+---
+
+## Development
+
+Requires: Xcode, [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`), [Zig](https://ziglang.org) (`brew install zig`).
 
 ```bash
 # First time: build the Ghostty terminal engine
 cd ghostty && zig build -Demit-xcframework=true -Dxcframework-target=universal -Doptimize=ReleaseFast && cd ..
 
-# Build the app
+# Build
 ./dev.sh build
 
 # Build and run
 ./dev.sh br
 
-# Run (if already built)
-./dev.sh run
-
-# Run with a specific directory
-./dev.sh run ~/repos/myproject
-
 # Run tests
 ./dev.sh test
 
-# Release build
-./dev.sh build-release
+# Run with a specific directory
+./dev.sh run ~/repos/myproject
 ```
 
-## Projects
+See [CLAUDE.md](CLAUDE.md) for development workflow, architecture, and conventions.
 
-Every project is created under the **base directory** (configurable in Settings, defaults to `~/Documents`). You can add projects by:
+### Website
 
-- **Cmd+Shift+N** to open the directory picker
-- **Cmd+N** when no workstream is selected
-- Dragging a folder onto the sidebar
-- Running `./dev.sh run /path/to/project` from the terminal
+The website lives in `website/` and is built with [Hugo](https://gohugo.io) + [Tailwind CSS](https://tailwindcss.com).
 
-If a project with the same directory already exists, it will be activated instead of duplicated.
+```bash
+cd website && bun install && bun run dev
+```
 
-## Keyboard Shortcuts
+### Localization
 
-### Global
-
-| Shortcut | Action |
-|---|---|
-| Cmd+N | Context-sensitive: add workstream (if in a project) or add project |
-| Cmd+Shift+N | Add new project |
-| Cmd+, | Toggle settings |
-
-### Workstream Tabs
-
-| Shortcut | Action |
-|---|---|
-| Cmd+Shift+A | Switch to Coding Agent tab |
-| Cmd+Shift+T | Switch to Terminal tab |
-| Cmd+Shift+B | Switch to Browser tab (reloads default URL) |
-| Cmd+Shift+O | Open default URL in external browser |
-
-## Workstream Tabs
-
-Each workstream has three tabs:
-
-- **Coding Agent** — runs the `claude` CLI if installed, otherwise a regular shell
-- **Terminal** — workspace shell for running commands
-- **Browser** — embedded WKWebView, defaults to `http://localhost:8000`
-
-## Settings
-
-Open with **Cmd+,** or click the gear icon in the sidebar.
-
-- **Environment** — shows detected tools (claude, gh, git, tmux) with versions
-- **Projects** — base directory for new projects
-- **Terminal** — tmux mode, external terminal app
-- **Coding Agent** — bypass permission prompts
-- **Applications** — default external browser
-- **Language** — override the app language (English, Catalan, Spanish, Swedish)
-
-## Localization
-
-All user-facing strings are localized. To add a new language:
+All strings are localized. To add a language:
 
 1. Copy `Localization/en.lproj` to `Localization/xx.lproj`
-2. Translate all values in `Localizable.strings` (keep keys unchanged)
-3. Run `xcodegen generate` to pick up the new locale
-4. Add the new lproj path to `project.yml` under sources
+2. Translate all values in `Localizable.strings`
+3. Add the path to `project.yml` and run `xcodegen generate`
 
-See [CLAUDE.md](CLAUDE.md) for localization rules when writing code.
+---
+
+<p align="center">
+  Built by <a href="https://davidpoblador.com">David Poblador i Garcia</a> with the support of <a href="https://alltuner.com">All Tuner Labs</a>.<br>
+  Made with ❤️ in Poblenou, Barcelona.
+</p>
