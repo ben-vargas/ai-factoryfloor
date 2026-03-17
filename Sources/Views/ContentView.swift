@@ -140,7 +140,7 @@ struct ContentView: View {
                 }
             }
             .alert(
-                "Projects Removed",
+                "Projects Not Found",
                 isPresented: Binding(
                     get: { !removedProjectNames.isEmpty },
                     set: { if !$0 { removedProjectNames = [] } }
@@ -148,8 +148,7 @@ struct ContentView: View {
             ) {
                 Button("OK") { removedProjectNames = [] }
             } message: {
-                Text("The following projects were removed because their directories no longer exist on disk:")
-                + Text("\n\n" + removedProjectNames.joined(separator: "\n"))
+                Text("The following projects were removed because their directories no longer exist on disk: \(removedProjectNames.joined(separator: ", "))")
             }
     }
 

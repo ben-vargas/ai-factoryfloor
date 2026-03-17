@@ -30,8 +30,8 @@
 "Archive Anyway" = "Archive Anyway";
 "This workstream has uncommitted changes that will be lost." = "This workstream has uncommitted changes that will be lost.";
 "The worktree and its branch will be removed." = "The worktree and its branch will be removed.";
-"Projects Removed" = "Projects Removed";
-"The following projects were removed because their directories no longer exist on disk:" = "The following projects were removed because their directories no longer exist on disk:";
+"Projects Not Found" = "Projects Not Found";
+"The following projects were removed because their directories no longer exist on disk: %@" = "The following projects were removed because their directories no longer exist on disk: %@";
 "Cancel" = "Cancel";
 "Remove" = "Remove";
 "Worktree Creation Failed" = "Worktree Creation Failed";
