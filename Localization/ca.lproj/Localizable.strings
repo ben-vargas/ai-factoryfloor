@@ -60,7 +60,7 @@
 "Not found" = "No trobat";
 "Authenticated" = "Autenticat";
 "Not authenticated" = "No autenticat";
-"Run gh auth login" = "Executa gh auth login";
+"Run: gh auth login" = "Executa: gh auth login";
 "Terminal" = "Terminal";
 "None" = "Cap";
 "Browser" = "Navegador";

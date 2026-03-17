@@ -60,7 +60,7 @@
 "Not found" = "Hittades inte";
 "Authenticated" = "Autentiserad";
 "Not authenticated" = "Inte autentiserad";
-"Run gh auth login" = "Kör gh auth login";
+"Run: gh auth login" = "Kör: gh auth login";
 "Terminal" = "Terminal";
 "None" = "Ingen";
 "Browser" = "Webbläsare";

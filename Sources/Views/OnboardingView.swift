@@ -186,8 +186,8 @@ private struct PrerequisiteRow: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         if !isAuth {
-                            Text("Run gh auth login")
-                                .font(.system(.caption, design: .monospaced))
+                            Text("Run: gh auth login")
+                                .font(.system(size: 10, design: .monospaced))
                                 .foregroundStyle(.tertiary)
                         }
                     }
