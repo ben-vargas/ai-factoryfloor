@@ -16,6 +16,8 @@ struct ProjectOverviewView: View {
     @State private var isPruning = false
 
     @AppStorage("factoryfloor.defaultTerminal") private var defaultTerminal: String = ""
+    @State private var docFiles: [DocFile] = []
+    @State private var selectedDoc: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -198,12 +200,37 @@ struct ProjectOverviewView: View {
             }
         }
         .formStyle(.grouped)
+
+            // Doc tabs
+            if !docFiles.isEmpty {
+                Divider()
+                HStack(spacing: 0) {
+                    ForEach(docFiles) { doc in
+                        DocTabButton(
+                            name: doc.name,
+                            isActive: selectedDoc == doc.name,
+                            action: { selectedDoc = doc.name }
+                        )
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 4)
+                Divider()
+
+                if let selected = selectedDoc,
+                   let doc = docFiles.first(where: { $0.name == selected }) {
+                    MarkdownContentView(markdown: doc.content, baseDirectory: project.directory)
+                        .id(selected)
+                }
+            }
         } // VStack
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             appEnv.refreshRepoInfo(for: project.directory)
             appEnv.refreshGitHubInfo(for: project.directory)
             refreshWorktrees()
+            loadDocFiles()
         }
         .alert("Prune Worktrees", isPresented: $showingPruneConfirm) {
             Button("Cancel", role: .cancel) {}
@@ -223,6 +250,17 @@ struct ProjectOverviewView: View {
             let wts = GitOperations.listWorktreesWithInfo(at: dir)
             await MainActor.run {
                 worktrees = wts
+            }
+        }
+    }
+
+    private func loadDocFiles() {
+        let dir = project.directory
+        Task.detached {
+            let found = DocFile.loadFrom(directory: dir)
+            await MainActor.run {
+                docFiles = found
+                selectedDoc = found.first?.name
             }
         }
     }

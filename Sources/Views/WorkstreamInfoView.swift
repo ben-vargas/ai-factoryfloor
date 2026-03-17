@@ -18,14 +18,6 @@ struct WorkstreamInfoView: View {
     @State private var selectedDoc: String?
     @State private var projectIcon: NSImage?
 
-    struct DocFile: Identifiable {
-        let name: String
-        let content: String
-        var id: String { name }
-    }
-
-    private static let docFileNames = ["README.md", "CLAUDE.md", "AGENTS.md"]
-
     var body: some View {
         VStack(spacing: 0) {
             // Pinned header
@@ -183,15 +175,7 @@ struct WorkstreamInfoView: View {
 
         let dir = workingDirectory
         Task.detached {
-            var found: [DocFile] = []
-            for name in Self.docFileNames {
-                let path = URL(fileURLWithPath: dir).appendingPathComponent(name).path
-                if let data = FileManager.default.contents(atPath: path),
-                   data.count >= 20,
-                   let content = String(data: data, encoding: .utf8) {
-                    found.append(DocFile(name: name, content: content))
-                }
-            }
+            let found = DocFile.loadFrom(directory: dir)
             await MainActor.run {
                 docFiles = found
                 selectedDoc = found.first?.name
@@ -274,7 +258,28 @@ private struct DirectoryActionButton: View {
     }
 }
 
-private struct DocTabButton: View {
+struct DocFile: Identifiable {
+    let name: String
+    let content: String
+    var id: String { name }
+
+    static let standardNames = ["README.md", "CLAUDE.md", "AGENTS.md"]
+
+    static func loadFrom(directory: String) -> [DocFile] {
+        var found: [DocFile] = []
+        for name in standardNames {
+            let path = URL(fileURLWithPath: directory).appendingPathComponent(name).path
+            if let data = FileManager.default.contents(atPath: path),
+               data.count >= 20,
+               let content = String(data: data, encoding: .utf8) {
+                found.append(DocFile(name: name, content: content))
+            }
+        }
+        return found
+    }
+}
+
+struct DocTabButton: View {
     let name: String
     let isActive: Bool
     let action: () -> Void
