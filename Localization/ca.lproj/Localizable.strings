@@ -28,6 +28,9 @@
 "The worktree and its branch will be removed." = "L'arbre de treball i la seva branca s'eliminaran.";
 "Cancel" = "Cancel·la";
 "Remove" = "Elimina";
+"Worktree Creation Failed" = "Error en crear l'arbre de treball";
+"Could not create a git worktree. Check that the repository is in a clean state and try again." = "No s'ha pogut crear un arbre de treball git. Comprova que el repositori està en un estat net i torna-ho a provar.";
+"OK" = "D'acord";
 
 /* Sheets */
 "Add Project" = "Afegeix projecte";
@@ -154,6 +157,11 @@
 "Opens the current workstream directory" = "Obre el directori del flux de treball actual";
 "Open in external browser" = "Obre al navegador extern";
 "Open in external terminal" = "Obre al terminal extern";
+
+/* Agent tab - Claude not installed */
+"Claude Code not found" = "Claude Code no trobat";
+"Install Claude Code to use the Coding Agent." = "Instal·la Claude Code per utilitzar l'agent de codi.";
+"Install Claude Code" = "Instal·la Claude Code";
 
 /* BrowserView */
 "Server not responding" = "El servidor no respon";

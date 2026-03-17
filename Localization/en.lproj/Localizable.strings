@@ -28,6 +28,9 @@
 "The worktree and its branch will be removed." = "The worktree and its branch will be removed.";
 "Cancel" = "Cancel";
 "Remove" = "Remove";
+"Worktree Creation Failed" = "Worktree Creation Failed";
+"Could not create a git worktree. Check that the repository is in a clean state and try again." = "Could not create a git worktree. Check that the repository is in a clean state and try again.";
+"OK" = "OK";
 
 /* Sheets */
 "Add Project" = "Add Project";
@@ -154,6 +157,11 @@
 "Opens the current workstream directory" = "Opens the current workstream directory";
 "Open in external browser" = "Open in external browser";
 "Open in external terminal" = "Open in external terminal";
+
+/* Agent tab - Claude not installed */
+"Claude Code not found" = "Claude Code not found";
+"Install Claude Code to use the Coding Agent." = "Install Claude Code to use the Coding Agent.";
+"Install Claude Code" = "Install Claude Code";
 
 /* BrowserView */
 "Server not responding" = "Server not responding";

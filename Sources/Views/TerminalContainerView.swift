@@ -68,7 +68,6 @@ struct TerminalContainerView: View {
     @State private var terminalCount = 0
     @State private var browserCount = 0
     @State private var scriptConfig: ScriptConfig = .empty
-    @State private var branchPR: GitHubPR?
     @State private var browserTitles: [UUID: String] = [:]
     @State private var terminalTitles: [UUID: String] = [:]
     @State private var cachedClaudeCommand: String?
@@ -178,13 +177,29 @@ struct TerminalContainerView: View {
                     scriptConfig: scriptConfig
                 )
             case .agent:
-                SingleTerminalView(
-                    surfaceID: claudeID,
-                    workingDirectory: workingDirectory,
-                    command: cachedClaudeCommand,
-                    isFocused: true,
-                    environmentVars: envVars
-                )
+                if appEnv.toolStatus.claude.path == nil {
+                    VStack(spacing: 16) {
+                        Image(systemName: "sparkle")
+                            .font(.system(size: 40))
+                            .foregroundStyle(.tertiary)
+                        Text("Claude Code not found")
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
+                        Text("Install Claude Code to use the Coding Agent.")
+                            .foregroundStyle(.tertiary)
+                        Link("Install Claude Code", destination: URL(string: "https://claude.ai/claude-code")!)
+                            .buttonStyle(.bordered)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    SingleTerminalView(
+                        surfaceID: claudeID,
+                        workingDirectory: workingDirectory,
+                        command: cachedClaudeCommand,
+                        isFocused: true,
+                        environmentVars: envVars
+                    )
+                }
             case .terminal(let id):
                 SingleTerminalView(
                     surfaceID: id,
