@@ -68,7 +68,7 @@ other = "En ny worktree med fresh branch, Claude Code session, terminal och brow
 [step3_title]
 other = "Koda med AI"
 [step3_desc]
-other = "Agenten renamnger din branch efter tasken. Setup scripts installerar dependencies. Byt workstream utan att tappa state."
+other = "Agenten namnger din branch efter tasken. Setup scripts installerar dependencies. Byt workstream utan att tappa state."
 
 [config_label]
 other = "Config"
@@ -143,6 +143,8 @@ other = "med stöd av"
 other = "Kontakt"
 [footer_sponsor]
 other = "Sponsra"
+[footer_privacy]
+other = "Integritet"
 
 # Open Source
 [oss_label]

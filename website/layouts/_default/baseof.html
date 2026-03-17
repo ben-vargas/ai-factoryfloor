@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ .Title }} - {{ .Site.Title }}</title>
-<meta name="description" content="{{ .Site.Params.description }}">
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="256x256" href="/apple-touch-icon.png">
@@ -23,7 +23,8 @@
 <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}">
 {{ end }}
 <link rel="alternate" hreflang="{{ .Site.Language.Lang }}" href="{{ .Permalink }}">
-<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
+{{ $defaultPage := . }}{{ range .AllTranslations }}{{ if eq .Lang "en" }}{{ $defaultPage = . }}{{ end }}{{ end }}
+<link rel="alternate" hreflang="x-default" href="{{ $defaultPage.Permalink }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">

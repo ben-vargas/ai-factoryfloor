@@ -151,6 +151,8 @@ other = "with the support of"
 other = "Contact"
 [footer_sponsor]
 other = "Sponsor"
+[footer_privacy]
+other = "Privacy"
 
 # Open Source
 [oss_label]

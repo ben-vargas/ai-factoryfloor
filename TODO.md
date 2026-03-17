@@ -81,6 +81,26 @@
 - [ ] Silent failure when adding workstream to non-git directory (no feedback)
 - [ ] Localize EnvironmentTabView strings, context menu strings, "detached", tooltip strings
 
+## Round 3 Audit
+
+### Website (Critical)
+- [ ] Fix hreflang alternates in baseof.html (all emit current lang instead of each alternate lang)
+- [ ] Add privacy policy link to footer
+- [ ] Fix sponsor link in footer to use localized path (not hardcoded /sponsor)
+
+### Website (Other)
+- [ ] Fix homepage title for SEO ("Home - Factory Floor" is weak)
+- [ ] Fix meta description to use per-page description instead of global
+- [ ] Fix Swedish typo in sv.toml: "renamnger" → "namnger"
+- [ ] Remove or fix dead _index.md content (layout never renders it, contains wrong shortcuts)
+- [ ] Take app screenshots for the website (workspace view, sidebar, terminal, environment tab)
+
+### Code Quality
+- [ ] Cache projectIndex/workstreamIndex in ProjectSidebar (rebuild on every render)
+- [ ] Remove redundant appEnv.objectWillChange handler for cachedClaudeCommand (already covered by onChange)
+- [ ] Move derivedUUID from TerminalContainerView to a utility file
+- [ ] Move retroactive String/UUID Identifiable conformances from ProjectSidebar to extensions file
+
 ## Future
 
 - [ ] Ensure docs/distribution.md is up to date with current CI, signing, Homebrew, and release workflow

@@ -144,6 +144,8 @@ other = "con el apoyo de"
 other = "Contacto"
 [footer_sponsor]
 other = "Patrocinar"
+[footer_privacy]
+other = "Privacidad"
 
 # Open Source
 [oss_label]
