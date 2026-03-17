@@ -33,12 +33,6 @@ rm -rf "$APP_PATH"
 mkdir -p "$BUILD_DIR"
 cp -R "$APP_BUILT" "$APP_PATH"
 
-echo "==> Signing..."
-codesign --deep --force --verify --verbose \
-  --sign "$SIGNING_IDENTITY" \
-  --options runtime \
-  "$APP_PATH"
-
 echo "==> Verifying signature..."
 codesign --verify --verbose=2 "$APP_PATH"
 spctl --assess --type execute --verbose=2 "$APP_PATH" 2>&1 || true

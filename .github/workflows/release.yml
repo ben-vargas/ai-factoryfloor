@@ -84,11 +84,6 @@ jobs:
           mkdir -p build/release
           cp -R "$APP_BUILT" "build/release/${APP_NAME}.app"
 
-          codesign --deep --force --verify --verbose \
-            --sign "$SIGNING_IDENTITY" \
-            --options runtime \
-            "build/release/${APP_NAME}.app"
-
           DMG_NAME="FactoryFloor-${VERSION}.dmg"
           hdiutil create -volname "$APP_NAME" \
             -srcfolder "build/release/${APP_NAME}.app" \
