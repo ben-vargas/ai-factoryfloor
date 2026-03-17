@@ -117,12 +117,13 @@ final class TerminalView: NSView, NSTextInputClient {
 
     deinit {
         if let surface {
-            // Registry is read on main thread from action_cb, so removal must also be on main.
-            // Remove BEFORE freeing to avoid a dangling pointer in the registry.
+            // Registry is read on main thread from action_cb, so removal must be on main.
+            // NSView deinit is almost always on main thread; use async for off-main to avoid deadlock.
             if Thread.isMainThread {
                 Self.surfaceRegistry.removeValue(forKey: surface)
             } else {
-                DispatchQueue.main.sync { Self.surfaceRegistry.removeValue(forKey: surface) }
+                let s = surface
+                DispatchQueue.main.async { Self.surfaceRegistry.removeValue(forKey: s) }
             }
             ghostty_surface_free(surface)
         }
