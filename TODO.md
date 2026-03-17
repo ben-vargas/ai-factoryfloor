@@ -59,7 +59,7 @@
 - [x] Sidebar branch names per workstream
 - [x] Sidebar credit line with sponsor link
 - [x] Localization: en, ca, es, sv (all strings translated, native-quality website copy)
-- [x] Script config: .factoryfloor.json / .factoryfloor/config.json
+- [x] Script config: .factoryfloor.json
 - [x] Environment tab: split-pane setup (auto) / run (on-demand) with re-execute buttons
 - [x] Preload agent and setup terminals in background on workstream open
 - [x] Occlude non-visible terminal surfaces to save GPU (ghostty_surface_set_occlusion)
