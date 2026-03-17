@@ -7,7 +7,7 @@
 ## Post-release
 
 - [ ] Auto-update mechanism (Sparkle): in-app update for direct DMG users
-- [ ] Port detection: auto-detect when run script opens a listening port, point browser to it (scoped in docs/port-detection.md)
+- [ ] Port detection: polish and test ff-run launcher in real-world projects
 
 ## Future
 
