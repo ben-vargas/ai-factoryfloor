@@ -186,7 +186,9 @@ struct WorkstreamInfoView: View {
             var found: [DocFile] = []
             for name in Self.docFileNames {
                 let path = URL(fileURLWithPath: dir).appendingPathComponent(name).path
-                if let content = try? String(contentsOfFile: path, encoding: .utf8) {
+                if let data = FileManager.default.contents(atPath: path),
+                   data.count >= 20,
+                   let content = String(data: data, encoding: .utf8) {
                     found.append(DocFile(name: name, content: content))
                 }
             }
