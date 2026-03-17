@@ -212,27 +212,30 @@ struct EnvironmentTabView: View {
     }
 
     private func buildCommand(script: String, role: String) -> String {
-        // Keep the terminal open after the script exits so output remains visible
-        let kept = "\(script); cat"
         if useTmux, let tmuxPath = appEnv.toolStatus.tmux.path {
             let session = TmuxSession.sessionName(project: projectName, workstream: workstreamName, role: role)
-            return TmuxSession.wrapCommand(tmuxPath: tmuxPath, sessionName: session, command: kept)
+            return TmuxSession.wrapCommand(tmuxPath: tmuxPath, sessionName: session, command: script)
         }
-        return kept
+        return script
     }
 
     private func restartSetup() {
         killTmuxSession(role: "setup")
         surfaceCache.removeSurface(for: setupID)
-        setupGeneration += 1
+        let next = setupGeneration + 1
+        // Delay generation increment so SwiftUI tears down the old view before creating the new one
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            setupGeneration = next
+        }
     }
 
     private func restartRun() {
         killTmuxSession(role: "run")
         surfaceCache.removeSurface(for: runID)
         runStarted = false
-        runGeneration += 1
-        DispatchQueue.main.async {
+        let next = runGeneration + 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            runGeneration = next
             runStarted = true
         }
     }
