@@ -14,6 +14,7 @@ struct SettingsView: View {
     @AppStorage("factoryfloor.branchPrefix") private var branchPrefix: String = "ff"
     @AppStorage("factoryfloor.appearance") private var appearance: String = "system"
     @AppStorage("factoryfloor.symlinkEnv") private var symlinkEnv: Bool = true
+    @AppStorage("factoryfloor.confirmQuit") private var confirmQuit: Bool = true
     @AppStorage("factoryfloor.bleedingEdge") private var bleedingEdge: Bool = false
     @AppStorage("factoryfloor.baseDirectory") private var baseDirectory: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first ?? ""
 
@@ -121,6 +122,11 @@ struct SettingsView: View {
 
                 Toggle("Symlink .env files", isOn: $symlinkEnv)
                 Text("Symlink .env and .env.local from the main repository into new worktrees.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Toggle("Confirm before quitting", isOn: $confirmQuit)
+                Text("Show a confirmation dialog when quitting with active workstreams.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

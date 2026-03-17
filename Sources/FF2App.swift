@@ -21,6 +21,8 @@ extension Notification.Name {
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        let confirmQuit = UserDefaults.standard.object(forKey: "factoryfloor.confirmQuit") as? Bool ?? true
+        guard confirmQuit else { return .terminateNow }
         let projects = ProjectStore.load()
         let hasWorkstreams = projects.contains { !$0.workstreams.isEmpty }
         guard hasWorkstreams else { return .terminateNow }

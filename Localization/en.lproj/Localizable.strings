@@ -84,3 +84,5 @@
 "Quit Factory Floor?" = "Quit Factory Floor?";
 "Active workstreams will be stopped." = "Active workstreams will be stopped.";
 "Quit" = "Quit";
+"Confirm before quitting" = "Confirm before quitting";
+"Show a confirmation dialog when quitting with active workstreams." = "Show a confirmation dialog when quitting with active workstreams.";

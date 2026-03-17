@@ -84,3 +84,5 @@
 "Quit Factory Floor?" = "Sortir de Factory Floor?";
 "Active workstreams will be stopped." = "Els fluxos de treball actius s'aturaran.";
 "Quit" = "Sortir";
+"Confirm before quitting" = "Confirma abans de sortir";
+"Show a confirmation dialog when quitting with active workstreams." = "Mostra un diàleg de confirmació en sortir amb fluxos de treball actius.";

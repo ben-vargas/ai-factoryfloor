@@ -84,3 +84,5 @@
 "Quit Factory Floor?" = "Avsluta Factory Floor?";
 "Active workstreams will be stopped." = "Aktiva arbetsflöden kommer att stoppas.";
 "Quit" = "Avsluta";
+"Confirm before quitting" = "Bekräfta innan avslut";
+"Show a confirmation dialog when quitting with active workstreams." = "Visa en bekräftelsedialog vid avslut med aktiva arbetsflöden.";
