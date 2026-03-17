@@ -395,7 +395,8 @@ struct TerminalContainerView: View {
                 app: app,
                 workingDirectory: workingDirectory,
                 command: cmd,
-                environmentVars: terminalEnvVars
+                environmentVars: terminalEnvVars,
+                waitAfterCommand: false
             )
         }
     }
@@ -518,6 +519,7 @@ struct SingleTerminalView: NSViewRepresentable {
     var initialInput: String?
     var isFocused: Bool = true
     var environmentVars: [String: String] = [:]
+    var waitAfterCommand: Bool = true
 
     @EnvironmentObject var surfaceCache: TerminalSurfaceCache
 
@@ -536,7 +538,8 @@ struct SingleTerminalView: NSViewRepresentable {
             workingDirectory: workingDirectory,
             command: command,
             initialInput: initialInput,
-            environmentVars: environmentVars
+            environmentVars: environmentVars,
+            waitAfterCommand: waitAfterCommand
         )
 
         if terminalView.superview !== container {
@@ -599,12 +602,12 @@ final class TerminalSurfaceCache: ObservableObject {
         }
     }
 
-    func surface(for id: UUID, app: ghostty_app_t, workingDirectory: String, command: String? = nil, initialInput: String? = nil, environmentVars: [String: String] = [:]) -> TerminalView {
+    func surface(for id: UUID, app: ghostty_app_t, workingDirectory: String, command: String? = nil, initialInput: String? = nil, environmentVars: [String: String] = [:], waitAfterCommand: Bool = true) -> TerminalView {
         if let existing = surfaces[id] {
             existing.workstreamID = id
             return existing
         }
-        let view = TerminalView(app: app, workingDirectory: workingDirectory, command: command, initialInput: initialInput, environmentVars: environmentVars)
+        let view = TerminalView(app: app, workingDirectory: workingDirectory, command: command, initialInput: initialInput, environmentVars: environmentVars, waitAfterCommand: waitAfterCommand)
         view.workstreamID = id
         surfaces[id] = view
         surfaceParams[id] = SurfaceParams(workingDirectory: workingDirectory, command: command, initialInput: initialInput, environmentVars: environmentVars)

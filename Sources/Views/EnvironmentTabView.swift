@@ -95,7 +95,8 @@ struct EnvironmentTabView: View {
                     workingDirectory: workingDirectory,
                     command: buildCommand(script: script, role: tmuxRole),
                     isFocused: false,
-                    environmentVars: environmentVars
+                    environmentVars: environmentVars,
+                    waitAfterCommand: false
                 )
                 .id(surfaceID)
             } else {
@@ -161,13 +162,14 @@ struct EnvironmentTabView: View {
 
             // Content
             if let script = scriptConfig.run {
-                if runStarted {
+                if runStarted && !runRestarting {
                     SingleTerminalView(
                         surfaceID: runID,
                         workingDirectory: workingDirectory,
                         command: buildCommand(script: script, role: "run"),
                         isFocused: false,
-                        environmentVars: environmentVars
+                        environmentVars: environmentVars,
+                        waitAfterCommand: false
                     )
                     .id(runID)
                 } else {
