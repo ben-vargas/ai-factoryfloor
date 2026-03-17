@@ -19,15 +19,15 @@
 
 ## UX
 
-- [ ] Show error feedback when worktree creation fails (currently adds broken workstream silently)
-- [ ] Show banner or message when claude CLI is not installed (agent tab just opens plain shell)
+- [x] Show error feedback when worktree creation fails (alert instead of silent broken workstream)
+- [x] Show install prompt when Claude CLI is not found (instead of plain shell)
 - [ ] Setup script: log output or show status instead of routing to /dev/null and ignoring exit code
 - [ ] Notify user when a project directory is removed from disk (currently silently removes from sidebar)
 - [ ] Onboarding: explain prerequisites (claude, gh), what a workstream is, Cmd+N contextual behavior
 - [ ] Execute the `run` script from .factoryfloor.json (currently loaded and displayed but never run)
 - [ ] Show error dialog when ghostty_init or ghostty_app_new fails (currently crashes or shows blank)
-- [ ] ToolRow: add shape/text indicator alongside color dot for authentication status (color-only info)
-- [ ] Add copy-branch-name button alongside copy-path in workstream info header
+- [x] ToolRow: text already shown alongside color dot (no change needed)
+- [x] Add copy-branch-name button alongside copy-path in workstream info header
 
 ## Accessibility
 
@@ -44,10 +44,10 @@
 - [x] ToolStatus.detect: remove misleading async signature (contains no await)
 - [x] Localization: add missing strings for Settings sections, HelpView, BrowserView error UI, ProjectOverviewView
 - [ ] Remove stale unused keys from Localizable.strings files
-- [ ] surfaceRegistry thread safety: confirm ghostty callback threading contract
+- [x] surfaceRegistry thread safety: action_cb runs on main thread, deinit removal dispatched to main
 - [x] Fix derivedUUID misleading comment (says SHA-256 but uses simple byte folding)
 - [x] Cache claudeCommand computed property (builds CommandBuilder on every render)
-- [ ] Consolidate polling timers (15s in ContentView + 30s in TerminalContainerView per workstream)
+- [x] Consolidate polling timers (PR refresh moved to AppEnvironment, single 15s timer)
 - [x] Parallelize refreshPathValidity git calls (TaskGroup)
 
 ## Future

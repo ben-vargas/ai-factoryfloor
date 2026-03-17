@@ -117,7 +117,9 @@ final class TerminalView: NSView, NSTextInputClient {
 
     deinit {
         if let surface {
-            Self.surfaceRegistry.removeValue(forKey: surface)
+            let s = surface
+            // Registry is read on main thread from action_cb, so removal must also be on main
+            DispatchQueue.main.async { Self.surfaceRegistry.removeValue(forKey: s) }
             ghostty_surface_free(surface)
         }
     }
