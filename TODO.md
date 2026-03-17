@@ -2,7 +2,7 @@
 
 ## Pre-release
 
-- [ ] Website: favicon, OG image, SEO meta tags
+- [x] Website: favicon, OG image, SEO meta tags
 
 ## Future
 
