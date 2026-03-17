@@ -58,6 +58,30 @@
 - [x] Consolidate polling timers (PR refresh moved to AppEnvironment, single 15s timer)
 - [x] Parallelize refreshPathValidity git calls (TaskGroup)
 
+## Round 2 Audit
+
+### Security
+- [ ] TmuxSession.wrapCommand: shell-escape the command argument (injection via project config scripts)
+- [ ] TerminalView.deinit: remove from surfaceRegistry before freeing surface (use-after-free race)
+- [ ] FilePersistence.writeAtomically: propagate errors instead of silently swallowing
+
+### Bugs
+- [ ] removeWorkstreamSurfaces: starts loop at 0 but terminals start at 1 (never cleans up terminal surfaces)
+- [ ] removeWorkstreamSurfaces: missing env-setup/env-run prefixes (leaks environment tab surfaces)
+- [ ] NSEvent.addLocalMonitorForEvents accumulates monitors on window re-appear (duplicate Cmd+W handling)
+- [ ] cachedClaudeCommand: workstreamName change not tracked in onChange (stale --name after branch rename)
+- [ ] Remove dead focusExclusively method from TerminalSurfaceCache
+
+### UX
+- [ ] HelpView: add Cmd+E (Environment) to shortcuts list, update README.md and CLAUDE.md
+- [ ] Align Claude Code install URL between agent tab and onboarding view
+- [ ] Worktree error message: improve specificity (mention branch conflicts, not just "clean state")
+- [ ] "Projects Removed" alert: soften title, verify Text newline rendering
+- [ ] EnvironmentTabView: don't hardcode .factoryfloor.json in instructions (mention all config formats)
+- [ ] OnboardingView: add action for unauthenticated gh (link to gh auth login)
+- [ ] Silent failure when adding workstream to non-git directory (no feedback)
+- [ ] Localize EnvironmentTabView strings, context menu strings, "detached", tooltip strings
+
 ## Future
 
 - [ ] Swift 6 migration (strict concurrency)
