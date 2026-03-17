@@ -58,7 +58,7 @@ Configure these in the repository settings (Settings > Secrets and variables > A
 | `APPLE_ID` | Apple ID email for notarization | Your Apple Developer account email |
 | `APPLE_TEAM_ID` | Apple Developer team ID | `J5TAY75Q3F` (All Tuner Labs) |
 | `APPLE_APP_PASSWORD` | App-specific password for notarytool | Generate at https://appleid.apple.com > Sign-In and Security > App-Specific Passwords |
-| `HOMEBREW_TAP_TOKEN` | GitHub PAT with `repo` scope for alltuner/homebrew-tap | Generate at https://github.com/settings/tokens |
+| `HOMEBREW_TAP_TOKEN` | GitHub PAT with `public_repo` scope for alltuner/homebrew-tap | Generate at https://github.com/settings/tokens |
 
 ## Website Deployment
 
