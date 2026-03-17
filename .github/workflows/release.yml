@@ -5,13 +5,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       version: ${{ steps.release.outputs.version }}
@@ -27,6 +26,8 @@ jobs:
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created }}
     runs-on: macos-14
+    permissions:
+      contents: write
     env:
       SIGNING_IDENTITY: "Developer ID Application: ALL TUNER LABS S.L. (J5TAY75Q3F)"
       APP_NAME: "Factory Floor"
