@@ -210,5 +210,9 @@ other = "Factory Floor is built on Ghostty's GPU-rendered terminal."
 other = "Get Factory Floor"
 [get_desc]
 other = "Install via Homebrew or download the latest release."
+[get_install]
+other = "Install"
+[get_upgrade]
+other = "Upgrade"
 [get_download]
 other = "Download from GitHub Releases"
