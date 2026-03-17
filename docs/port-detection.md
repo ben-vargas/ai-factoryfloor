@@ -112,7 +112,10 @@ When a port is selected:
    libproc inspection requires Swift/C.
 
 2. **State file polling vs FSEvents watching?**
-   Polling is simpler for v1. FSEvents could replace it later.
+   Decision: FSEvents via `DispatchSource.makeFileSystemObjectSource`.
+   Reacts instantly when ff-run writes the file, no polling timer
+   needed. Watch the run-state directory for file creation, then
+   watch the specific file for writes.
 
 3. **What happens if ff-run crashes?**
    State file has `startedAt` timestamp. App ignores entries with
@@ -123,8 +126,11 @@ When a port is selected:
    Add a setting later if users complain.
 
 5. **Timeout?**
-   Stop polling after 60 seconds with no new ports. The launcher
-   keeps running but stops writing state updates.
+   Less critical with FSEvents (no wasted app-side polling). The
+   launcher should still stop its libproc scanning after 60 seconds
+   with no new ports to save CPU. Once a port is selected and
+   stable, scanning stops. The launcher keeps running (it's the
+   process supervisor) but no longer writes state updates.
 
 ## Effort estimate
 
