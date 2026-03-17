@@ -174,6 +174,8 @@ other = "Fet amb ❤️ al Poblenou, Barcelona"
 other = "Factory Floor és gratuït i open source. El teu suport ajuda a finançar el desenvolupament continuat i noves funcionalitats."
 [sponsor_financial]
 other = "Suport financer"
+[sponsor_other]
+other = "Altres maneres de col·laborar"
 [sponsor_github]
 other = "GitHub Sponsors"
 [sponsor_github_desc]

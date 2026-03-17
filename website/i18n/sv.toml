@@ -166,6 +166,8 @@ other = "Byggd med ❤️ i Poblenou, Barcelona"
 other = "Factory Floor är gratis och open source. Ditt stöd hjälper till att finansiera fortsatt utveckling och nya funktioner."
 [sponsor_financial]
 other = "Ekonomiskt stöd"
+[sponsor_other]
+other = "Andra sätt att stödja"
 [sponsor_github]
 other = "GitHub Sponsors"
 [sponsor_github_desc]
