@@ -63,12 +63,12 @@
 ### Security
 - [x] TmuxSession.wrapCommand: shell-escape command via sh -c wrapper
 - [x] TerminalView.deinit: remove from surfaceRegistry before freeing (Thread.isMainThread guard)
-- [ ] FilePersistence.writeAtomically: propagate errors instead of silently swallowing
+- [x] FilePersistence.writeAtomically: propagate errors (now throws, callers log warnings)
 
 ### Bugs
 - [x] removeWorkstreamSurfaces: now covers all prefixes (terminal, browser, env-setup, env-run) with 0-99 range
 - [x] NSEvent.addLocalMonitorForEvents: guard against duplicate installation
-- [ ] cachedClaudeCommand: workstreamName change not tracked in onChange (stale --name after branch rename)
+- [x] cachedClaudeCommand: workstreamName change now tracked in onChange
 
 ### UX
 - [x] HelpView: add Cmd+E (Environment), update README.md and CLAUDE.md
@@ -84,6 +84,7 @@
 ## Future
 
 - [ ] Ensure docs/distribution.md is up to date with current CI, signing, Homebrew, and release workflow
+- [ ] Document version release routine: step-by-step process for cutting a release, what release-please does, manual steps needed, how to verify
 - [ ] Plan distribution and auto-update strategy: compare Mac App Store vs Homebrew vs direct DMG vs Sparkle; document tradeoffs for code signing, sandboxing, update mechanisms, and user experience (Homebrew is a must regardless)
 - [ ] Swift 6 migration (strict concurrency)
 - [ ] External Chrome integration: launch with --remote-debugging-port for WebMCP/CDP
