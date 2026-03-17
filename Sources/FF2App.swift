@@ -142,12 +142,12 @@ struct FF2App: App {
                 Button("Rebuild Setup") {
                     NotificationCenter.default.post(name: .rebuildSetup, object: nil)
                 }
-                .keyboardShortcut("s", modifiers: [.control, .shift])
+                .keyboardShortcut("r", modifiers: [.control, .shift])
 
                 Button("Start/Rerun") {
                     NotificationCenter.default.post(name: .rerunScript, object: nil)
                 }
-                .keyboardShortcut("r", modifiers: [.control, .shift])
+                .keyboardShortcut("s", modifiers: [.control, .shift])
 
                 Divider()
 
