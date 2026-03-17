@@ -450,15 +450,6 @@ struct ProjectSidebar: View {
     }
 }
 
-// Make String work as an Identifiable sheet item
-extension String: @retroactive Identifiable {
-    public var id: String { self }
-}
-
-extension UUID: @retroactive Identifiable {
-    public var id: UUID { self }
-}
-
 extension FileManager {
     func isDirectory(at url: URL) -> Bool {
         var isDir: ObjCBool = false

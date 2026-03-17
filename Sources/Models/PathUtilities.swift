@@ -22,6 +22,14 @@ func derivedUUID(from base: UUID, salt: String) -> UUID {
                        bytes[12], bytes[13], bytes[14], bytes[15]))
 }
 
+extension String: @retroactive Identifiable {
+    public var id: String { self }
+}
+
+extension UUID: @retroactive Identifiable {
+    public var id: UUID { self }
+}
+
 extension String {
     /// Replaces the home directory prefix with ~ for compact display.
     var abbreviatedPath: String {
