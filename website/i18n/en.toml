@@ -1,3 +1,7 @@
+# Site
+[site_tagline]
+other = "AI-powered development workspace for macOS"
+
 # Navigation
 [nav_features]
 other = "Features"
